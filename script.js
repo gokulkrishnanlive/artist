@@ -259,7 +259,7 @@ function createCustomCarousel(containerId, items, type) {
                     </iframe>
                 </div>
                 <div class="carousel-card-body">
-                    <h5 class="carousel-card-title">${item.title || 'Video'}</h5>
+                    <h5 class="carousel-card-title">${item.title || ''}</h5>
                     <p class="carousel-card-text">${item.description || ''}</p>
                 </div>
             `;
@@ -563,8 +563,8 @@ async function loadVideoGallery() {
                 
                 return {
                     url: videoUrl,
-                    title: 'Video Content',
-                    description: 'Check out this video'
+                  //  title: 'Video Content',
+                  //  description: 'Check out this video'
                 };
             }).filter(item => item !== null);
             

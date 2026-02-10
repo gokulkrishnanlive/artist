@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gokullive Official - Gokul G. | District Coordinator | Carnatic Music Enthusiast</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Official website of Gokul G. - District Coordinator, Treasury Department Kerala | Carnatic Music Enthusiast | Content Creator | Sharing professional journey, artistic pursuits, and cultural insights from Thiruvananthapuram, Kerala.">
+    <meta name="keywords" content="Gokul G., Gokullive Official, Kerala Government Employee, Treasury Department Kerala, District Coordinator Trivandrum, Carnatic Music Lover, Indian Classical Music, Kerala Artist, Trivandrum Blogger, Government Service Kerala, Treasury Department Careers, Indian Content Creator, Kerala Cultural Blog, Professional Blog India, Government Job Insights, Music and Arts Kerala, Thiruvananthapuram District Coordinator, Kerala University Alumni, Government Arts College Trivandrum, Indian Professional Journey, Career Growth India, Arts and Administration, Public Service Kerala, Cultural Enthusiast India">
+    <meta name="author" content="Gokul G.">
+    <meta property="og:title" content="Gokullive Official - Gokul G. | District Coordinator | Carnatic Music Enthusiast">
+    <meta property="og:description" content="Explore the journey of Gokul G. - balancing government service with artistic passion. Insights into Treasury Department work, Carnatic music, and cultural content from Kerala.">
+    <meta property="og:url" content="https://gokullive.com">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#home">
+                <img id="site-logo" src="" alt="Gokullive Logo" height="45" class="">
+                <div class="d-flex flex-column">
+                    <span class="fw-bold fs-4" id="site-name">Gokullive Official</span>
+                </div>
+            </a>
+            
+            <button class="navbar-toggler" type="button" aria-label="Toggle navigation" id="navbarToggler">
+                <span class="line"></span>
+                <span class="line"></span>
+            </button>
+            
+            <button class="close-menu-btn" id="closeMenuBtn">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <!-- Menu Overlay -->
+            <div class="navbar-overlay" id="navbarOverlay"></div>
+            
+            <!-- Navigation Menu -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#home">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">
+                            <i class="fas fa-user"></i> About
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#news">
+                            <i class="fas fa-newspaper"></i> Latest News
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#gallery">
+                            <i class="fas fa-images"></i> Image Gallery
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#video">
+                            <i class="fas fa-video"></i> Video Gallery
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link blog-link" href="https://thegokulliveblog.blogspot.com/" target="_blank">
+                            <i class="fas fa-blog"></i> Blogs
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">
+                            <i class="fas fa-address-book"></i> Contact
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="nav-theme-toggle">
+                    <span><i class="fas fa-palette me-2"></i> Theme</span>
+                    <button class="toggle-theme-btn" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Slider -->
+    <section id="home" class="hero-slider">
+        <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+            <!-- Indicators -->
+            <div class="carousel-indicators" id="hero-indicators">
+                <!-- Indicators will be dynamically added -->
+            </div>
+            
+            <div class="carousel-inner" id="hero-slides">
+                <!-- Slides will be loaded dynamically -->
+                <div class="carousel-item active">
+                    <div class="hero-slide">
+                        <div class="image-loading" style="height: 600px;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hero Slider Arrows -->
+            <button class="simple-slider-arrow prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="simple-slider-arrow next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            
+            <div class="scroll-indicator" onclick="scrollToAbout()">
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Me Section (Light) -->
+    <section id="about" class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="text-center mb-5">
+                        <h2 class="section-title">About Me</h2>
+                    </div>
+                    <div id="about-content">
+                        <!-- About content will be loaded dynamically -->
+                        <div class="text-center">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Latest News Section (Dark) -->
+    <section id="news" class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Latest News</h2>
+            </div>
+            <div id="news-cards">
+                <!-- News cards will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Image Gallery Section (Light) -->
+    <section id="gallery" class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Image Gallery</h2>
+            </div>
+            <div id="gallery-cards">
+                <!-- Gallery cards will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Gallery Section (Dark) -->
+    <section id="video" class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Video Gallery</h2>
+            </div>
+            <div id="video-cards">
+                <!-- Video cards will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer/Contact Section (Light) -->
+    <footer id="contact" class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="text-center mb-5">
+                        <h2 class="section-title">Contact Me</h2>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <h4 class="card-title mb-4"><i class="fas fa-address-card me-2"></i> Contact Information</h4>
+                                    <p><i class="fas fa-phone me-2"></i> Phone: +91 9495108708</p>
+                                    <p><i class="fas fa-envelope me-2"></i> Email: contact@gokullive.com</p>
+                                    <p><i class="fas fa-map-marker-alt me-2"></i> Location: Thiruvananthapuram, Kerala, India</p>
+                                    <p><i class="fas fa-briefcase me-2"></i> Position: District Coordinator, Treasury Department</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <h4 class="card-title mb-4"><i class="fas fa-share-alt me-2"></i> Connect With Me</h4>
+                                    <div class="d-flex justify-content-center flex-wrap">
+                                        <a href="https://www.facebook.com/AmbadiGokulkrishnan" class="social-icon mb-3" target="_blank" title="Facebook">
+                                            <i class="fab fa-facebook-f"></i>
+                                        </a>
+                                        <a href="https://twitter.com/imgokulkrishna" class="social-icon mb-3" target="_blank" title="Twitter/X">
+                                            <i class="fab fa-twitter"></i>
+                                        </a>
+                                        <a href="https://www.instagram.com/AmbadiGokulkrishnan/" class="social-icon mb-3" target="_blank" title="Instagram">
+                                            <i class="fab fa-instagram"></i>
+                                        </a>
+                                        <a href="https://www.youtube.com/channel/UC3TtAg-o71U-SxI0VxzNFqQ/videos" class="social-icon mb-3" target="_blank" title="YouTube">
+                                            <i class="fab fa-youtube"></i>
+                                        </a>
+                                        <a href="https://thegokulliveblog.blogspot.com/" class="social-icon mb-3" target="_blank" title="Blog">
+                                            <i class="fas fa-blog"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-5">
+            <div class="text-center">
+                <p class="mb-2">&copy; 2023-2025 Gokullive Official. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>

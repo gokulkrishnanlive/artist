@@ -78,30 +78,81 @@
             } catch(e) { console.error(e); return []; }
         }
 
-        // Hero Slider (NO GAP, NO BLACK OVERLAY)
-        async function loadHeroSlider() {
-            const container = document.getElementById('hero-slides');
-            const indicatorsDiv = document.getElementById('hero-indicators');
-            container.innerHTML = '';
-            indicatorsDiv.innerHTML = '';
-            const localImages = [
-                './images/hero-slider/01.jpg','./images/hero-slider/02.jpg','./images/hero-slider/03.jpg',
-                './images/hero-slider/04.jpg','./images/hero-slider/05.jpg'
-            ];
-            localImages.forEach((src, idx) => {
-                const slide = document.createElement('div');
-                slide.className = `carousel-item ${idx === 0 ? 'active' : ''}`;
-                slide.innerHTML = `<div class="hero-slide"><img src="${src}" class="hero-slide-img" alt="Hero ${idx+1}" onerror="this.src='https://placehold.co/1600x600?text=Gokullive'"></div>`;
-                container.appendChild(slide);
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.setAttribute('data-bs-target', '#heroCarousel');
-                btn.setAttribute('data-bs-slide-to', idx);
-                btn.className = idx === 0 ? 'active' : '';
-                indicatorsDiv.appendChild(btn);
-            });
-            new bootstrap.Carousel(document.getElementById('heroCarousel'), { interval: 5000, wrap: true, ride: 'carousel' });
+       // Hero Slider - Fetches images from "Slider images" sheet column A2:A
+async function loadHeroSlider() {
+    const container = document.getElementById('hero-slides');
+    const indicatorsDiv = document.getElementById('hero-indicators');
+    container.innerHTML = '';
+    indicatorsDiv.innerHTML = '';
+    
+    let sliderImages = [];
+    
+    try {
+        // Fetch images from "Slider images" sheet, column A starting from row 2
+        const imagesData = await fetchSheetData('Slider images', 'A2:A');
+        
+        if (imagesData && imagesData.length > 0) {
+            // Filter out empty rows and get image URLs
+            sliderImages = imagesData
+                .map(row => row[0] ? row[0].trim() : '')
+                .filter(url => url !== '');
+            
+            debugLog(`Found ${sliderImages.length} images from Slider images sheet`);
         }
+        
+        // If no images found in sheet, use fallback local images
+        if (sliderImages.length === 0) {
+            debugLog("No images found in Slider images sheet, using fallback images");
+            sliderImages = [
+                './images/hero-slider/01.jpg',
+                './images/hero-slider/02.jpg', 
+                './images/hero-slider/03.png',
+                './images/hero-slider/04.jpg',
+                './images/hero-slider/05.jpg'
+            ];
+        }
+        
+    } catch (error) {
+        console.error("Error loading slider images from sheet:", error);
+        debugLog("Error fetching slider images, using fallback images");
+        // Fallback images
+        sliderImages = [
+            './images/hero-slider/01.jpg',
+            './images/hero-slider/02.jpg', 
+            './images/hero-slider/03.png',
+            './images/hero-slider/04.jpg',
+            './images/hero-slider/05.jpg'
+        ];
+    }
+    
+    // Create slides and indicators
+    sliderImages.forEach((src, idx) => {
+        const slide = document.createElement('div');
+        slide.className = `carousel-item ${idx === 0 ? 'active' : ''}`;
+        slide.innerHTML = `<div class="hero-slide"><img src="${src}" class="hero-slide-img" alt="Hero ${idx+1}" onerror="this.src='https://placehold.co/1600x600?text=Gokullive'"></div>`;
+        container.appendChild(slide);
+        
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.setAttribute('data-bs-target', '#heroCarousel');
+        btn.setAttribute('data-bs-slide-to', idx);
+        btn.className = idx === 0 ? 'active' : '';
+        indicatorsDiv.appendChild(btn);
+    });
+    
+    // Initialize carousel if there are slides
+    if (sliderImages.length > 0) {
+        new bootstrap.Carousel(document.getElementById('heroCarousel'), { 
+            interval: 5000, 
+            wrap: true, 
+            ride: 'carousel' 
+        });
+        debugLog(`Hero slider initialized with ${sliderImages.length} slides`);
+    } else {
+        debugLog("No slides to display in hero slider");
+        container.innerHTML = '<div class="alert alert-warning text-center">No slider images available</div>';
+    }
+}
         
         // Custom carousel (single row, manual arrows)
         function createCustomCarousel(containerId, items, type) {
@@ -312,7 +363,7 @@
                             box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 10px;
                             font-size: 14px; backdrop-filter: blur(10px); animation: slideIn 0.5s ease;">
                     <i class="fas fa-music"></i>
-                    <span>Click to play background music</span>
+                    <span>play music?</span>
                     <i class="fas fa-play-circle"></i>
                 </div>
             `;

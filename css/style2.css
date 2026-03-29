@@ -39,7 +39,7 @@
 }
 
 body {
-    font-family: 'Inter', 'Outfit', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-family: 'Poppins', sans-serif;
     background-color: var(--bg-color);
     color: var(--text-color);
     transition: background-color 0.3s, color 0.3s;
@@ -272,13 +272,11 @@ body {
     background-clip: text;
     color: transparent;
     display: block;
-    font-weight: 800;
+    font-weight: 700;
     font-size: 2.5rem;
     text-align: left;
     width: 100%;
     text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    font-family: 'Outfit', sans-serif;
-    letter-spacing: -0.02em;
 }
 
 .section-title::after {
@@ -292,18 +290,13 @@ body {
     border-radius: 2px;
 }
 
-/* Hero Slider - No Gap */
+/* Hero Slider */
 .hero-slider {
     height: auto;
     overflow: hidden;
     position: relative;
-    margin-top: 0 !important;
+    margin-top: -100px;
     width: 100%;
-}
-
-#home {
-    padding: 0 !important;
-    margin: 0 !important;
 }
 
 .hero-slide {
@@ -312,10 +305,14 @@ body {
     position: relative;
 }
 
-/* REMOVED BLACK OVERLAY */
 .hero-slide::after {
-    display: none !important;
-    background: none !important;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.5));
 }
 
 .hero-slide-img {
@@ -338,9 +335,6 @@ body {
     cursor: pointer;
     opacity: 0.7;
     text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-    padding: 0;
-    width: auto;
-    height: auto;
 }
 
 .simple-slider-arrow:hover {
@@ -559,7 +553,7 @@ section {
     padding: 0.5rem 1.5rem;
     border-radius: 25px;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 500;
     transition: all 0.3s;
     border: none;
     cursor: pointer;
@@ -609,16 +603,6 @@ section {
 .social-icon:hover {
     transform: translateY(-5px) rotate(5deg);
     box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-}
-
-/* WhatsApp specific */
-.social-icon.whatsapp {
-    background: linear-gradient(135deg, #25D366, #128C7E);
-}
-
-.social-icon.whatsapp:hover {
-    transform: translateY(-5px) rotate(0deg);
-    box-shadow: 0 8px 20px rgba(37,211,102,0.3);
 }
 
 /* Read more toggle */
@@ -673,39 +657,139 @@ section {
     box-shadow: 0 6px 18px rgba(0,0,0,0.15);
 }
 
-/* Loading animation */
-.image-loading {
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-    background-size: 200% 100%;
-    animation: loading 1.5s infinite;
-    width: 100%;
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .hero-slider {
+        height: 450px;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .simple-slider-arrow {
+        font-size: 2.5rem;
+    }
+    
+    .simple-carousel-control {
+        font-size: 2rem;
+    }
+    
+    .simple-carousel-control.prev {
+        left: 10px;
+    }
+    
+    .simple-carousel-control.next {
+        right: 10px;
+    }
+    
+    .card-carousel-container {
+        padding: 0 10px;
+    }
 }
 
-@keyframes loading {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
+@media (max-width: 768px) {
+    .hero-slider {
+        height: 400px;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+    }
+    
+    section {
+        padding: 70px 0;
+    }
+    
+    .simple-slider-arrow {
+        font-size: 2rem;
+        left: 15px;
+    }
+    
+    .simple-slider-arrow.next {
+        right: 15px;
+    }
+    
+    .simple-carousel-control {
+        font-size: 1.8rem;
+    }
+    
+    .simple-carousel-control.prev {
+        left: 8px;
+    }
+    
+    .simple-carousel-control.next {
+        right: 8px;
+    }
+    
+    .card-carousel-container {
+        padding: 0 8px;
+    }
+    
+    .carousel-card {
+        width: 250px;
+        min-width: 250px;
+    }
 }
 
-/* About Badge Image */
-.about-badge-wrapper {
-    display: flex;
-    justify-content: center;
-	margin-top: -5rem;
-    margin-bottom: 1.5rem;
+@media (max-width: 576px) {
+    .hero-slider {
+        height: 350px;
+    }
+    
+    .simple-slider-arrow {
+        font-size: 1.8rem;
+        left: 10px;
+    }
+    
+    .simple-slider-arrow.next {
+        right: 10px;
+    }
+    
+    .simple-carousel-control {
+        font-size: 1.5rem;
+    }
+    
+    .simple-carousel-control.prev {
+        left: 5px;
+    }
+    
+    .simple-carousel-control.next {
+        right: 5px;
+    }
+    
+    .card-carousel-container {
+        padding: 0 5px;
+    }
+    
+    .carousel-card {
+        width: 220px;
+        min-width: 220px;
+    }
 }
 
-.about-badge-img {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 4px solid var(--primary-color);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    transition: transform 0.3s;
+/* Debug styles */
+.debug-info {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    z-index: 9999;
+    display: none;
 }
 
-.about-badge-img:hover {
-    transform: scale(1.02);
+/* Auto-scroll animation for hero slider */
+@keyframes autoScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
+
+.hero-slider .carousel-inner {
+   /* animation: autoScroll 20s infinite linear;*/
 }
 
 /* Scroll indicator */
@@ -733,153 +817,8 @@ section {
     40% { transform: translateX(-50%) translateY(-15px); }
     60% { transform: translateX(-50%) translateY(-7px); }
 }
-
-/* ============================================ */
-/* FIXED: Hero Slider Arrows - Mobile Responsive */
-/* ============================================ */
-
-/* Base styles already set above, now override for mobile */
-@media (max-width: 768px) {
-    .hero-slider {
-        height: 400px;
-    }
-    
-    .section-title {
-        font-size: 1.8rem;
-    }
-    
-    section {
-        padding: 70px 0;
-    }
-    
-    .simple-slider-arrow {
-        font-size: 2rem;
-    }
-    
-    .simple-carousel-control {
-        font-size: 1.8rem;
-    }
-    
-    .simple-carousel-control.prev {
-        left: 8px;
-    }
-    
-    .simple-carousel-control.next {
-        right: 8px;
-    }
-    
-    .card-carousel-container {
-        padding: 0 8px;
-    }
-    
-    .carousel-card {
-        width: 250px;
-        min-width: 250px;
-    }
-}
-
-/* CRITICAL FIX: Ensure arrows stay at edges on small devices */
-@media (max-width: 576px) {
-    .hero-slider {
-        height: 350px;
-    }
-    
-    /* Hero slider arrows - force left/right edges */
-    .hero-slider .simple-slider-arrow {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 2rem;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: transparent !important;
-        color: #ff0000 !important;
-        opacity: 0.8;
-        z-index: 15;
-        cursor: pointer;
-        padding: 0;
-        margin: 0;
-    }
-    
-    /* Left arrow - stick to left edge */
-    .hero-slider .simple-slider-arrow.prev {
-        left: 8px !important;
-        right: auto !important;
-    }
-    
-    /* Right arrow - stick to right edge */
-    .hero-slider .simple-slider-arrow.next {
-        right: 8px !important;
-        left: auto !important;
-    }
-    
-    /* Reset any potential centering */
-    .hero-slider .simple-slider-arrow {
-        left: auto;
-        right: auto;
-    }
-    
-    /* Other carousel arrows */
-    .simple-carousel-control {
-        font-size: 1.5rem;
-    }
-    
-    .simple-carousel-control.prev {
-        left: 5px;
-    }
-    
-    .simple-carousel-control.next {
-        right: 5px;
-    }
-    
-    .card-carousel-container {
-        padding: 0 5px;
-    }
-    
-    .carousel-card {
-        width: 220px;
-        min-width: 220px;
-    }
-}
-
-/* Tablet landscape fix */
-@media (min-width: 577px) and (max-width: 768px) {
-    .hero-slider .simple-slider-arrow.prev {
-        left: 12px !important;
-        right: auto !important;
-    }
-    .hero-slider .simple-slider-arrow.next {
-        right: 12px !important;
-        left: auto !important;
-    }
-}
-
-/* Desktop large screens */
 @media (min-width: 992px) {
     .navbar-expand-lg .navbar-toggler {
         display: block !important;
     }
-}
-
-/* Smooth scrolling offset */
-html {
-    scroll-padding-top: 76px;
-    scroll-behavior: smooth;
-}
-
-/* Debug styles (hidden by default) */
-.debug-info {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    background: rgba(0,0,0,0.8);
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    font-size: 12px;
-    z-index: 9999;
-    display: none;
 }

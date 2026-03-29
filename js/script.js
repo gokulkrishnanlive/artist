@@ -1,5 +1,4 @@
-
-        // ==================== CONFIGURATION ====================
+// ==================== CONFIGURATION ====================
         const SHEET_ID = "189JXNzfCLPD1LipJBY8EG3tLZDYMkxXhCsku-_CNhFE";
         const API_KEY = "AIzaSyBAuS3Brpsw5JOJnjNJii1UlFa7ClXf8d4";
         
@@ -86,7 +85,7 @@
             container.innerHTML = '';
             indicatorsDiv.innerHTML = '';
             const localImages = [
-                './images/hero-slider/01.jpg','./images/hero-slider/02.jpg','./images/hero-slider/03.png',
+                './images/hero-slider/01.jpg','./images/hero-slider/02.jpg','./images/hero-slider/03.jpg',
                 './images/hero-slider/04.jpg','./images/hero-slider/05.jpg'
             ];
             localImages.forEach((src, idx) => {
@@ -240,6 +239,139 @@
             const aboutSec = document.getElementById('about');
             if(aboutSec) window.scrollTo({ top: aboutSec.offsetTop - 70, behavior: 'smooth' });
         }
+
+        // ==================== MUSIC PLAYER FUNCTIONS ====================
+        
+        let audioPlayer = null;
+        let musicPlayed = false;
+
+        async function initBackgroundMusic() {
+            try {
+                // Fetch settings data to get music URL from B5 cell
+                const settingsData = await fetchSheetData('settings', 'A1:B10');
+                
+                let musicUrl = null;
+                
+                // Find the music URL (looking for row with "music" or directly B5)
+                if (settingsData && settingsData.length > 0) {
+                    // Method 1: Check for row with "music" or "bgmusic" in column A
+                    for (let i = 0; i < settingsData.length; i++) {
+                        const key = settingsData[i][0] ? settingsData[i][0].toString().toLowerCase() : '';
+                        if (key === 'music' || key === 'bgmusic' || key === 'backgroundmusic') {
+                            musicUrl = settingsData[i][1];
+                            break;
+                        }
+                    }
+                    
+                    // Method 2: If not found, check B5 directly (row index 4, column index 1)
+                    if (!musicUrl && settingsData[4] && settingsData[4][1]) {
+                        musicUrl = settingsData[4][1];
+                    }
+                }
+                
+                if (musicUrl && musicUrl.trim() !== "") {
+                    debugLog("Music URL found: " + musicUrl);
+                    
+                    // Create audio element
+                    audioPlayer = new Audio(musicUrl);
+                    audioPlayer.loop = true; // Loop the music
+                    audioPlayer.volume = 0.5; // Set volume to 50%
+                    
+                    // Try to play (browsers may block autoplay)
+                    const playPromise = audioPlayer.play();
+                    
+                    if (playPromise !== undefined) {
+                        playPromise.then(() => {
+                            debugLog("Background music started successfully");
+                            musicPlayed = true;
+                        }).catch(error => {
+                            debugLog("Autoplay was prevented. User interaction required.");
+                            // Show a subtle hint that music is available
+                            showMusicHint();
+                        });
+                    }
+                } else {
+                    debugLog("No music URL found in settings sheet B5");
+                }
+            } catch (error) {
+                console.error("Error loading background music:", error);
+                debugLog("Error loading music: " + error.message);
+            }
+        }
+
+        // Show hint for user to enable music (if autoplay blocked)
+        function showMusicHint() {
+            // Check if hint already exists
+            if (document.getElementById('music-hint')) return;
+            
+            const hint = document.createElement('div');
+            hint.id = 'music-hint';
+            hint.innerHTML = `
+                <div style="position: fixed; bottom: 20px; right: 20px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); 
+                            color: white; padding: 12px 20px; border-radius: 50px; cursor: pointer; z-index: 9999;
+                            box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 10px;
+                            font-size: 14px; backdrop-filter: blur(10px); animation: slideIn 0.5s ease;">
+                    <i class="fas fa-music"></i>
+                    <span>Click to play background music</span>
+                    <i class="fas fa-play-circle"></i>
+                </div>
+            `;
+            document.body.appendChild(hint);
+            
+            hint.addEventListener('click', () => {
+                if (audioPlayer && !musicPlayed) {
+                    audioPlayer.play().then(() => {
+                        musicPlayed = true;
+                        hint.style.animation = 'fadeOut 0.5s ease';
+                        setTimeout(() => hint.remove(), 500);
+                        debugLog("Music started by user interaction");
+                    }).catch(err => console.log("Still cannot play:", err));
+                }
+            });
+            
+            // Auto-hide after 10 seconds if not clicked
+            setTimeout(() => {
+                if (hint && hint.parentNode && !musicPlayed) {
+                    hint.style.animation = 'fadeOut 0.5s ease';
+                    setTimeout(() => hint.remove(), 500);
+                }
+            }, 10000);
+        }
+
+        // Function to stop music (if needed)
+        function stopBackgroundMusic() {
+            if (audioPlayer) {
+                audioPlayer.pause();
+                audioPlayer.currentTime = 0;
+                debugLog("Background music stopped");
+            }
+        }
+
+        // Function to pause music
+        function pauseBackgroundMusic() {
+            if (audioPlayer && !audioPlayer.paused) {
+                audioPlayer.pause();
+                debugLog("Background music paused");
+            }
+        }
+
+        // Function to resume music
+        function resumeBackgroundMusic() {
+            if (audioPlayer && audioPlayer.paused && musicPlayed) {
+                audioPlayer.play();
+                debugLog("Background music resumed");
+            }
+        }
+
+        // Function to set volume (0 to 1)
+        function setMusicVolume(volume) {
+            if (audioPlayer) {
+                audioPlayer.volume = Math.max(0, Math.min(1, volume));
+                debugLog(`Music volume set to ${audioPlayer.volume}`);
+            }
+        }
+        
+        // ==================== INITIALIZATION ====================
         
         // Initialize everything
         document.addEventListener('DOMContentLoaded', async () => {
@@ -251,6 +383,9 @@
             await loadImageGallery();
             await loadVideoGallery();
             
+            // ⭐ INITIALIZE BACKGROUND MUSIC AFTER ALL CONTENT LOADS ⭐
+            await initBackgroundMusic();
+            
             // Smooth scroll for anchor links
             document.querySelectorAll('a[href^="#"]:not([href="#"])').forEach(anchor => {
                 anchor.addEventListener('click', function(e) {
@@ -260,6 +395,7 @@
                     if(target) window.scrollTo({ top: target.offsetTop - 70, behavior: 'smooth' });
                 });
             });
+            
             // active nav on scroll
             window.addEventListener('scroll', () => {
                 const sections = document.querySelectorAll('section');

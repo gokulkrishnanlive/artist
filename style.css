@@ -719,7 +719,7 @@ section {
     
     .simple-slider-arrow {
         font-size: 2rem;
-        left: 15px;
+      /*  left: 15px;*/
     }
     
     .simple-slider-arrow.next {

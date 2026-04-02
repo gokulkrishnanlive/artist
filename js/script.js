@@ -9,6 +9,10 @@ const navbarOverlay = document.getElementById('navbarOverlay');
 const navbarToggler = document.getElementById('navbarToggler');
 const navbarCollapse = document.getElementById('navbarNav');
 
+// Flag to prevent scroll events during carousel transition
+let isCarouselSliding = false;
+let scrollTimeout = null;
+
 // Helper debug
 function debugLog(msg) { console.log(msg); }
 
@@ -24,6 +28,7 @@ function detectTheme() {
         themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
     }
 }
+
 themeToggle.addEventListener('click', () => {
     const curr = document.documentElement.getAttribute('data-bs-theme');
     if (curr === 'dark') {
@@ -88,11 +93,9 @@ async function loadHeroSlider() {
     let sliderData = [];
     
     try {
-        // Fetch images and captions from "Slider images" sheet, columns A, B, C from row 2
         const imagesData = await fetchSheetData('Slider images', 'A2:C');
         
         if (imagesData && imagesData.length > 0) {
-            // Filter out rows with empty image URLs
             sliderData = imagesData
                 .filter(row => row[0] && row[0].trim() !== '')
                 .map(row => ({
@@ -104,9 +107,8 @@ async function loadHeroSlider() {
             debugLog(`Found ${sliderData.length} slides from Slider images sheet`);
         }
         
-        // If no images found in sheet, use fallback local images
         if (sliderData.length === 0) {
-            debugLog("No images found in Slider images sheet, using fallback images");
+            debugLog("No images found, using fallback images");
             sliderData = [
                 { image: './images/hero-slider/01.jpg', caption: 'Welcome to Gokullive', link: '' },
                 { image: './images/hero-slider/02.jpg', caption: 'Carnatic Music Enthusiast', link: '' },
@@ -117,8 +119,7 @@ async function loadHeroSlider() {
         }
         
     } catch (error) {
-        console.error("Error loading slider images from sheet:", error);
-        debugLog("Error fetching slider images, using fallback images");
+        console.error("Error loading slider images:", error);
         sliderData = [
             { image: './images/hero-slider/01.jpg', caption: 'Welcome to Gokullive', link: '' },
             { image: './images/hero-slider/02.jpg', caption: 'Carnatic Music Enthusiast', link: '' },
@@ -130,11 +131,9 @@ async function loadHeroSlider() {
     
     // Create slides and indicators
     sliderData.forEach((slide, idx) => {
-        // Create slide
         const slideDiv = document.createElement('div');
         slideDiv.className = `carousel-item ${idx === 0 ? 'active' : ''}`;
         
-        // Build slide HTML with caption overlay and button
         let captionHtml = '';
         if (slide.caption || slide.link) {
             captionHtml = `<div class="hero-caption">
@@ -147,13 +146,12 @@ async function loadHeroSlider() {
         
         slideDiv.innerHTML = `
             <div class="hero-slide">
-                <img src="${slide.image}" class="hero-slide-img" alt="Hero ${idx+1}" onerror="this.src='https://placehold.co/1600x600?text=Gokullive'">
+                <img src="${slide.image}" class="hero-slide-img" alt="Hero ${idx+1}" onerror="this.src='https://placehold.co/1600x900?text=Gokullive'">
                 ${captionHtml}
             </div>
         `;
         container.appendChild(slideDiv);
         
-        // Create indicator
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.setAttribute('data-bs-target', '#heroCarousel');
@@ -163,21 +161,29 @@ async function loadHeroSlider() {
         indicatorsDiv.appendChild(btn);
     });
     
-    // Initialize carousel if there are slides
+    // Initialize carousel
     if (sliderData.length > 0) {
-        new bootstrap.Carousel(document.getElementById('heroCarousel'), { 
+        const carouselElement = document.getElementById('heroCarousel');
+        const carousel = new bootstrap.Carousel(carouselElement, { 
             interval: 5000, 
             wrap: true, 
             ride: 'carousel' 
         });
+        
+        // Prevent scroll events during carousel transition (fixes mobile jumping)
+        carouselElement.addEventListener('slide.bs.carousel', () => {
+            isCarouselSliding = true;
+        });
+        
+        carouselElement.addEventListener('slid.bs.carousel', () => {
+            setTimeout(() => { isCarouselSliding = false; }, 100);
+        });
+        
         debugLog(`Hero slider initialized with ${sliderData.length} slides`);
-    } else {
-        debugLog("No slides to display in hero slider");
-        container.innerHTML = '<div class="alert alert-warning text-center">No slider images available</div>';
     }
 }
 
-// Helper function to escape HTML to prevent XSS
+// Escape HTML helper
 function escapeHtml(str) {
     if (!str) return '';
     return str
@@ -188,7 +194,7 @@ function escapeHtml(str) {
         .replace(/'/g, '&#39;');
 }
 
-// Custom carousel with swipe support for mobile/tablet
+// Custom carousel with swipe support
 function createCustomCarousel(containerId, items, type) {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -200,7 +206,7 @@ function createCustomCarousel(containerId, items, type) {
     reversed.forEach(item => {
         const card = document.createElement('div'); card.className = 'carousel-card';
         if (type === 'video') {
-            card.innerHTML = `<div class="video-container"><iframe src="${item.url}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy" title="${item.title || 'Video'}"></iframe></div>
+            card.innerHTML = `<div class="video-container"><iframe src="${item.url}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy" title="${escapeHtml(item.title || 'Video')}"></iframe></div>
             <div class="carousel-card-body"><h5 class="carousel-card-title">${escapeHtml(item.title || '')}</h5><p class="carousel-card-text">${escapeHtml(item.description || '')}</p></div>`;
         } else {
             card.innerHTML = `<div class="position-relative overflow-hidden"><img src="${item.image || 'https://images.unsplash.com/photo-1540835296355-c04f7a063cbb?w=600'}" class="carousel-card-img" alt="${escapeHtml(item.title)}" onerror="this.src='https://placehold.co/600x400?text=Image'"></div>
@@ -219,7 +225,6 @@ function createCustomCarousel(containerId, items, type) {
     const cards = inner.querySelectorAll('.carousel-card');
     if(!cards.length) return;
     const gap = 30; let cardWidth = cards[0].offsetWidth + gap;
-    const maxScroll = (cards.length - 1) * cardWidth;
     
     function updatePosition() {
         inner.style.transform = `translateX(-${current * cardWidth}px)`;
@@ -232,7 +237,7 @@ function createCustomCarousel(containerId, items, type) {
     prevBtn.addEventListener('click', () => { if(current > 0) { current--; updatePosition(); } });
     nextBtn.addEventListener('click', () => { if(current < cards.length - 1) { current++; updatePosition(); } });
     
-    // SWIPE SUPPORT FOR MOBILE AND TABLET
+    // Swipe support for mobile
     let touchStartX = 0;
     let touchEndX = 0;
     let isSwiping = false;
@@ -240,13 +245,6 @@ function createCustomCarousel(containerId, items, type) {
     carouselWrap.addEventListener('touchstart', (e) => {
         touchStartX = e.changedTouches[0].screenX;
         isSwiping = true;
-    }, { passive: true });
-    
-    carouselWrap.addEventListener('touchmove', (e) => {
-        if (!isSwiping) return;
-        touchEndX = e.changedTouches[0].screenX;
-        const diff = touchStartX - touchEndX;
-        // Optional: Add visual feedback while swiping
     }, { passive: true });
     
     carouselWrap.addEventListener('touchend', () => {
@@ -257,53 +255,15 @@ function createCustomCarousel(containerId, items, type) {
         
         if (Math.abs(diff) > swipeThreshold) {
             if (diff > 0 && current < cards.length - 1) {
-                // Swipe left - next
                 current++;
                 updatePosition();
             } else if (diff < 0 && current > 0) {
-                // Swipe right - previous
                 current--;
                 updatePosition();
             }
         }
-        // Reset values
         touchStartX = 0;
         touchEndX = 0;
-    });
-    
-    // Mouse drag support for desktop (optional)
-    let mouseStartX = 0;
-    let isDragging = false;
-    
-    carouselWrap.addEventListener('mousedown', (e) => {
-        mouseStartX = e.clientX;
-        isDragging = true;
-        carouselWrap.style.cursor = 'grabbing';
-    });
-    
-    window.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        const diff = mouseStartX - e.clientX;
-        // Visual feedback while dragging
-    });
-    
-    window.addEventListener('mouseup', (e) => {
-        if (!isDragging) return;
-        isDragging = false;
-        carouselWrap.style.cursor = 'grab';
-        const swipeThreshold = 50;
-        const diff = mouseStartX - e.clientX;
-        
-        if (Math.abs(diff) > swipeThreshold) {
-            if (diff > 0 && current < cards.length - 1) {
-                current++;
-                updatePosition();
-            } else if (diff < 0 && current > 0) {
-                current--;
-                updatePosition();
-            }
-        }
-        mouseStartX = 0;
     });
     
     window.addEventListener('resize', () => { 
@@ -313,7 +273,94 @@ function createCustomCarousel(containerId, items, type) {
     updatePosition();
 }
 
-// Load About Me + Badge from settings sheet B4
+// Load Facebook Posts (Embedded)
+async function loadFacebookPosts() {
+    const container = document.getElementById('facebook-posts-container');
+    const facebookPageUrl = "https://www.facebook.com/AmbadiGokulkrishnan";
+    const postsLimit = 6; // Number of posts to show
+    
+    // Create Facebook SDK
+    if (!document.getElementById('facebook-jssdk')) {
+        const fbScript = document.createElement('script');
+        fbScript.id = 'facebook-jssdk';
+        fbScript.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0&appId=YOUR_APP_ID';
+        fbScript.async = true;
+        fbScript.defer = true;
+        document.head.appendChild(fbScript);
+    }
+    
+    // Create posts grid
+    let html = `<div class="facebook-posts-wrapper">`;
+    
+    // Using Facebook Page Plugin for embedded timeline
+    html += `
+        <div class="facebook-post-card">
+            <div class="fb-page" 
+                data-href="${facebookPageUrl}" 
+                data-tabs="timeline" 
+                data-width="380" 
+                data-height="600" 
+                data-small-header="false" 
+                data-adapt-container-width="true" 
+                data-hide-cover="false" 
+                data-show-facepile="true" 
+                data-lazy="true">
+            </div>
+        </div>
+    `;
+    
+    // Alternative: Individual post embeds (you can add specific post URLs from Google Sheets)
+    try {
+        const postsData = await fetchSheetData('Facebook posts', 'A2:C');
+        if (postsData && postsData.length > 0) {
+            postsData.slice(0, postsLimit).forEach(post => {
+                const postUrl = post[0];
+                const postCaption = post[1] || '';
+                if (postUrl && postUrl.trim()) {
+                    html += `
+                        <div class="facebook-post-card">
+                            <div class="fb-post" 
+                                data-href="${postUrl}" 
+                                data-width="380" 
+                                data-show-text="true" 
+                                data-lazy="true">
+                            </div>
+                            ${postCaption ? `<div class="carousel-card-body"><p class="carousel-card-text">${escapeHtml(postCaption)}</p></div>` : ''}
+                        </div>
+                    `;
+                }
+            });
+        }
+    } catch(e) {
+        console.log("No specific posts in sheet, using page timeline only");
+    }
+    
+    html += `</div>`;
+    
+    // Fallback if Facebook SDK doesn't load
+    html += `
+        <div class="facebook-fallback" id="facebook-fallback" style="display: none;">
+            <i class="fab fa-facebook"></i>
+            <h3>Connect on Facebook</h3>
+            <p>Follow my Facebook page for the latest updates, photos, and videos from my journey as a District Coordinator and Carnatic Music enthusiast.</p>
+            <a href="${facebookPageUrl}" class="facebook-follow-btn" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-facebook-f"></i> Follow on Facebook
+            </a>
+        </div>
+    `;
+    
+    container.innerHTML = html;
+    
+    // Show fallback after timeout if SDK doesn't load
+    setTimeout(() => {
+        if (typeof FB === 'undefined') {
+            const fallback = document.getElementById('facebook-fallback');
+            if (fallback) fallback.style.display = 'block';
+        }
+    }, 5000);
+}
+
+// Load About Me
 async function loadAboutMe() {
     const aboutContainer = document.getElementById('about-content');
     let badgeImageUrl = null;
@@ -325,12 +372,7 @@ async function loadAboutMe() {
                     badgeImageUrl = row[1] || null;
                     break;
                 }
-                if(row[0] && row[0].toString().toLowerCase() === 'badge image') {
-                    badgeImageUrl = row[1] || null;
-                    break;
-                }
             }
-            // fallback B4 specifically if needed: cell B4
             if(!badgeImageUrl && settingsData[3] && settingsData[3][1]) badgeImageUrl = settingsData[3][1];
         }
     } catch(e) { console.warn(e); }
@@ -457,7 +499,6 @@ async function initBackgroundMusic() {
         }
     } catch (error) {
         console.error("Error loading background music:", error);
-        debugLog("Error loading music: " + error.message);
     }
 }
 
@@ -531,9 +572,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadAboutMe();
     await loadNews();
     await loadImageGallery();
+    await loadFacebookPosts();
     await loadVideoGallery();
     await initBackgroundMusic();
     
+    // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]:not([href="#"])').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             if(this.getAttribute('target') === '_blank') return;
@@ -543,17 +586,32 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
     
+    // Throttled scroll event for active nav links (prevents jumping)
+    let ticking = false;
     window.addEventListener('scroll', () => {
-        const sections = document.querySelectorAll('section');
-        const navLinks = document.querySelectorAll('.navbar-nav .nav-link[href^="#"]');
-        let current = '';
-        sections.forEach(sec => {
-            const top = sec.offsetTop - 100;
-            if(scrollY >= top && scrollY < top + sec.offsetHeight) current = sec.getAttribute('id');
-        });
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            if(link.getAttribute('href') === `#${current}`) link.classList.add('active');
-        });
+        // Skip if carousel is sliding (previos menu icon flicker)
+        if (isCarouselSliding) return;
+        
+        if (!ticking) {
+            requestAnimationFrame(() => {
+                const sections = document.querySelectorAll('section');
+                const navLinks = document.querySelectorAll('.navbar-nav .nav-link[href^="#"]');
+                let current = '';
+                sections.forEach(sec => {
+                    const top = sec.offsetTop - 100;
+                    if (window.scrollY >= top && window.scrollY < top + sec.offsetHeight) {
+                        current = sec.getAttribute('id');
+                    }
+                });
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}`) {
+                        link.classList.add('active');
+                    }
+                });
+                ticking = false;
+            });
+            ticking = true;
+        }
     });
 });

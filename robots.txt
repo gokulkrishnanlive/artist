@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /private/
+Sitemap: https://gokulkrishnanlive.github.io/artist/sitemap.xml
+
+# Allow Google to crawl all pages
+User-agent: Googlebot
+Allow: /
+
+# Specify crawl delay for bots
+Crawl-delay: 5

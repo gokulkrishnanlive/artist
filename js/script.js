@@ -80,13 +80,18 @@ async function fetchSheetData(sheetName, range) {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
         return data.values || [];
-    } catch(e) { console.error(e); return []; }
+    } catch(e) { 
+        console.error(`Error fetching ${sheetName}:`, e); 
+        return []; 
+    }
 }
 
 // Hero Slider - Fetches images from "Slider images" sheet columns A, B, C
 async function loadHeroSlider() {
     const container = document.getElementById('hero-slides');
     const indicatorsDiv = document.getElementById('hero-indicators');
+    if (!container || !indicatorsDiv) return;
+    
     container.innerHTML = '';
     indicatorsDiv.innerHTML = '';
     
@@ -164,22 +169,26 @@ async function loadHeroSlider() {
     // Initialize carousel
     if (sliderData.length > 0) {
         const carouselElement = document.getElementById('heroCarousel');
-        const carousel = new bootstrap.Carousel(carouselElement, { 
-            interval: 5000, 
-            wrap: true, 
-            ride: 'carousel' 
-        });
-        
-        // Prevent scroll events during carousel transition (fixes mobile jumping)
-        carouselElement.addEventListener('slide.bs.carousel', () => {
-            isCarouselSliding = true;
-        });
-        
-        carouselElement.addEventListener('slid.bs.carousel', () => {
-            setTimeout(() => { isCarouselSliding = false; }, 100);
-        });
-        
+        if (carouselElement) {
+            const carousel = new bootstrap.Carousel(carouselElement, { 
+                interval: 5000, 
+                wrap: true, 
+                ride: 'carousel' 
+            });
+            
+            // Prevent scroll events during carousel transition (fixes mobile jumping)
+            carouselElement.addEventListener('slide.bs.carousel', () => {
+                isCarouselSliding = true;
+            });
+            
+            carouselElement.addEventListener('slid.bs.carousel', () => {
+                setTimeout(() => { isCarouselSliding = false; }, 100);
+            });
+        }
         debugLog(`Hero slider initialized with ${sliderData.length} slides`);
+    } else {
+        debugLog("No slides to display in hero slider");
+        container.innerHTML = '<div class="alert alert-warning text-center">No slider images available</div>';
     }
 }
 
@@ -198,33 +207,48 @@ function escapeHtml(str) {
 function createCustomCarousel(containerId, items, type) {
     const container = document.getElementById(containerId);
     if (!container) return;
-    if (!items || items.length === 0) { container.innerHTML = '<div class="alert alert-info text-center">No content available</div>'; return; }
+    if (!items || items.length === 0) { 
+        container.innerHTML = '<div class="alert alert-info text-center">No content available</div>'; 
+        return; 
+    }
+    
     container.innerHTML = '';
-    const carouselWrap = document.createElement('div'); carouselWrap.className = 'card-carousel-container';
-    const inner = document.createElement('div'); inner.className = 'card-carousel-inner';
+    const carouselWrap = document.createElement('div'); 
+    carouselWrap.className = 'card-carousel-container';
+    const inner = document.createElement('div'); 
+    inner.className = 'card-carousel-inner';
     const reversed = [...items].reverse();
+    
     reversed.forEach(item => {
-        const card = document.createElement('div'); card.className = 'carousel-card';
+        const card = document.createElement('div'); 
+        card.className = 'carousel-card';
         if (type === 'video') {
             card.innerHTML = `<div class="video-container"><iframe src="${item.url}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy" title="${escapeHtml(item.title || 'Video')}"></iframe></div>
             <div class="carousel-card-body"><h5 class="carousel-card-title">${escapeHtml(item.title || '')}</h5><p class="carousel-card-text">${escapeHtml(item.description || '')}</p></div>`;
         } else {
             card.innerHTML = `<div class="position-relative overflow-hidden"><img src="${item.image || 'https://images.unsplash.com/photo-1540835296355-c04f7a063cbb?w=600'}" class="carousel-card-img" alt="${escapeHtml(item.title)}" onerror="this.src='https://placehold.co/600x400?text=Image'"></div>
             <div class="carousel-card-body"><h5 class="carousel-card-title">${escapeHtml(item.title)}</h5><p class="carousel-card-text">${escapeHtml(item.content)}</p></div>
-            <div class="carousel-card-footer"><a href="${item.link || '#'}" class="view-btn" target="_blank">View</a></div>`;
+            <div class="carousel-card-footer"><a href="${item.link || '#'}" class="view-btn" target="_blank" rel="noopener noreferrer">View</a></div>`;
         }
         inner.appendChild(card);
     });
+    
     carouselWrap.appendChild(inner);
-    const prevBtn = document.createElement('button'); prevBtn.className = 'simple-carousel-control prev'; prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
-    const nextBtn = document.createElement('button'); nextBtn.className = 'simple-carousel-control next'; nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
-    carouselWrap.appendChild(prevBtn); carouselWrap.appendChild(nextBtn);
+    const prevBtn = document.createElement('button'); 
+    prevBtn.className = 'simple-carousel-control prev'; 
+    prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+    const nextBtn = document.createElement('button'); 
+    nextBtn.className = 'simple-carousel-control next'; 
+    nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+    carouselWrap.appendChild(prevBtn); 
+    carouselWrap.appendChild(nextBtn);
     container.appendChild(carouselWrap);
     
     let current = 0;
     const cards = inner.querySelectorAll('.carousel-card');
     if(!cards.length) return;
-    const gap = 30; let cardWidth = cards[0].offsetWidth + gap;
+    const gap = 30; 
+    let cardWidth = cards[0].offsetWidth + gap;
     
     function updatePosition() {
         inner.style.transform = `translateX(-${current * cardWidth}px)`;
@@ -234,8 +258,19 @@ function createCustomCarousel(containerId, items, type) {
         nextBtn.disabled = current >= cards.length - 1;
     }
     
-    prevBtn.addEventListener('click', () => { if(current > 0) { current--; updatePosition(); } });
-    nextBtn.addEventListener('click', () => { if(current < cards.length - 1) { current++; updatePosition(); } });
+    prevBtn.addEventListener('click', () => { 
+        if(current > 0) { 
+            current--; 
+            updatePosition(); 
+        } 
+    });
+    
+    nextBtn.addEventListener('click', () => { 
+        if(current < cards.length - 1) { 
+            current++; 
+            updatePosition(); 
+        } 
+    });
     
     // Swipe support for mobile
     let touchStartX = 0;
@@ -245,6 +280,11 @@ function createCustomCarousel(containerId, items, type) {
     carouselWrap.addEventListener('touchstart', (e) => {
         touchStartX = e.changedTouches[0].screenX;
         isSwiping = true;
+    }, { passive: true });
+    
+    carouselWrap.addEventListener('touchmove', (e) => {
+        if (!isSwiping) return;
+        touchEndX = e.changedTouches[0].screenX;
     }, { passive: true });
     
     carouselWrap.addEventListener('touchend', () => {
@@ -266,103 +306,52 @@ function createCustomCarousel(containerId, items, type) {
         touchEndX = 0;
     });
     
+    // Mouse drag support for desktop
+    let mouseStartX = 0;
+    let isDragging = false;
+    
+    carouselWrap.addEventListener('mousedown', (e) => {
+        mouseStartX = e.clientX;
+        isDragging = true;
+        carouselWrap.style.cursor = 'grabbing';
+    });
+    
+    window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+    });
+    
+    window.addEventListener('mouseup', (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        carouselWrap.style.cursor = 'grab';
+        const swipeThreshold = 50;
+        const diff = mouseStartX - e.clientX;
+        
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0 && current < cards.length - 1) {
+                current++;
+                updatePosition();
+            } else if (diff < 0 && current > 0) {
+                current--;
+                updatePosition();
+            }
+        }
+        mouseStartX = 0;
+    });
+    
     window.addEventListener('resize', () => { 
         cardWidth = cards[0].offsetWidth + gap; 
         updatePosition();
     });
+    
     updatePosition();
 }
 
-// Load Facebook Posts (Embedded)
-async function loadFacebookPosts() {
-    const container = document.getElementById('facebook-posts-container');
-    const facebookPageUrl = "https://www.facebook.com/AmbadiGokulkrishnan";
-    const postsLimit = 6; // Number of posts to show
-    
-    // Create Facebook SDK
-    if (!document.getElementById('facebook-jssdk')) {
-        const fbScript = document.createElement('script');
-        fbScript.id = 'facebook-jssdk';
-        fbScript.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0&appId=YOUR_APP_ID';
-        fbScript.async = true;
-        fbScript.defer = true;
-        document.head.appendChild(fbScript);
-    }
-    
-    // Create posts grid
-    let html = `<div class="facebook-posts-wrapper">`;
-    
-    // Using Facebook Page Plugin for embedded timeline
-    html += `
-        <div class="facebook-post-card">
-            <div class="fb-page" 
-                data-href="${facebookPageUrl}" 
-                data-tabs="timeline" 
-                data-width="380" 
-                data-height="600" 
-                data-small-header="false" 
-                data-adapt-container-width="true" 
-                data-hide-cover="false" 
-                data-show-facepile="true" 
-                data-lazy="true">
-            </div>
-        </div>
-    `;
-    
-    // Alternative: Individual post embeds (you can add specific post URLs from Google Sheets)
-    try {
-        const postsData = await fetchSheetData('Facebook posts', 'A2:C');
-        if (postsData && postsData.length > 0) {
-            postsData.slice(0, postsLimit).forEach(post => {
-                const postUrl = post[0];
-                const postCaption = post[1] || '';
-                if (postUrl && postUrl.trim()) {
-                    html += `
-                        <div class="facebook-post-card">
-                            <div class="fb-post" 
-                                data-href="${postUrl}" 
-                                data-width="380" 
-                                data-show-text="true" 
-                                data-lazy="true">
-                            </div>
-                            ${postCaption ? `<div class="carousel-card-body"><p class="carousel-card-text">${escapeHtml(postCaption)}</p></div>` : ''}
-                        </div>
-                    `;
-                }
-            });
-        }
-    } catch(e) {
-        console.log("No specific posts in sheet, using page timeline only");
-    }
-    
-    html += `</div>`;
-    
-    // Fallback if Facebook SDK doesn't load
-    html += `
-        <div class="facebook-fallback" id="facebook-fallback" style="display: none;">
-            <i class="fab fa-facebook"></i>
-            <h3>Connect on Facebook</h3>
-            <p>Follow my Facebook page for the latest updates, photos, and videos from my journey as a District Coordinator and Carnatic Music enthusiast.</p>
-            <a href="${facebookPageUrl}" class="facebook-follow-btn" target="_blank" rel="noopener noreferrer">
-                <i class="fab fa-facebook-f"></i> Follow on Facebook
-            </a>
-        </div>
-    `;
-    
-    container.innerHTML = html;
-    
-    // Show fallback after timeout if SDK doesn't load
-    setTimeout(() => {
-        if (typeof FB === 'undefined') {
-            const fallback = document.getElementById('facebook-fallback');
-            if (fallback) fallback.style.display = 'block';
-        }
-    }, 5000);
-}
-
-// Load About Me
+// Load About Me + Badge from settings sheet
 async function loadAboutMe() {
     const aboutContainer = document.getElementById('about-content');
+    if (!aboutContainer) return;
+    
     let badgeImageUrl = null;
     try {
         const settingsData = await fetchSheetData('settings', 'A1:B20');
@@ -379,9 +368,11 @@ async function loadAboutMe() {
     
     const aboutData = await fetchSheetData('about me', 'A2:C');
     let html = `<div class="card border-0 shadow-sm"><div class="card-body p-4">`;
+    
     if(badgeImageUrl && badgeImageUrl.trim() !== "") {
         html += `<div class="about-badge-wrapper"><img src="${badgeImageUrl}" class="about-badge-img" alt="Profile Badge" onerror="this.style.display='none'"></div>`;
     }
+    
     if(aboutData.length === 0) {
         html += `<p class="lead">Hello! I'm Gokul G., a passionate individual who seamlessly blends professional dedication with creative expression. My journey reflects a harmonious balance between a stable government career and deep artistic pursuits.</p>
         <div id="more-about" class="hidden-content mt-4"><h5>My Journey</h5><p>Started my journey in 2018 with a simple camera and a dream to create engaging content.</p><h5>My Mission</h5><p>To inspire and entertain through authentic storytelling.</p></div>
@@ -414,19 +405,31 @@ async function loadNews() {
 
 async function loadImageGallery() {
     const data = await fetchSheetData('Image gallery', 'A2:D');
-    if(!data.length) { createCustomCarousel('gallery-cards', [{image:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4', title:'Gallery', content:'Moments', link:'#'}], 'gallery'); return; }
+    if(!data.length) { 
+        createCustomCarousel('gallery-cards', [{image:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4', title:'Gallery', content:'Moments', link:'#'}], 'gallery'); 
+        return; 
+    }
     const items = data.map(row => ({ image: row[0] || '', title: row[1] || 'Image', content: row[2] || '', link: row[3] || '#' }));
     createCustomCarousel('gallery-cards', items, 'gallery');
 }
 
 async function loadVideoGallery() {
     const data = await fetchSheetData('Video gallery', 'A2:C');
-    if(!data.length) { createCustomCarousel('video-cards', [{url:'https://www.youtube.com/embed/dQw4w9WgXcQ', title:'Sample', description:'Video content'}], 'video'); return; }
+    if(!data.length) { 
+        createCustomCarousel('video-cards', [{url:'https://www.youtube.com/embed/dQw4w9WgXcQ', title:'Sample', description:'Video content'}], 'video'); 
+        return; 
+    }
     const items = data.map(row => {
         if(!row[0]) return null;
         let url = row[0].trim();
-        if(url.includes('youtu.be/')) { let id = url.split('youtu.be/')[1].split('?')[0]; url = `https://www.youtube.com/embed/${id}`; }
-        else if(url.includes('youtube.com/watch?v=')) { let id = url.split('v=')[1].split('&')[0]; url = `https://www.youtube.com/embed/${id}`; }
+        if(url.includes('youtu.be/')) { 
+            let id = url.split('youtu.be/')[1].split('?')[0]; 
+            url = `https://www.youtube.com/embed/${id}`; 
+        }
+        else if(url.includes('youtube.com/watch?v=')) { 
+            let id = url.split('v=')[1].split('&')[0]; 
+            url = `https://www.youtube.com/embed/${id}`; 
+        }
         return { url, title: row[1] || 'Video', description: row[2] || '' };
     }).filter(v => v);
     createCustomCarousel('video-cards', items, 'video');
@@ -563,6 +566,39 @@ function showMusicHint() {
     }, 10000);
 }
 
+// Function to stop music (if needed)
+function stopBackgroundMusic() {
+    if (audioPlayer) {
+        audioPlayer.pause();
+        audioPlayer.currentTime = 0;
+        debugLog("Background music stopped");
+    }
+}
+
+// Function to pause music
+function pauseBackgroundMusic() {
+    if (audioPlayer && !audioPlayer.paused) {
+        audioPlayer.pause();
+        debugLog("Background music paused");
+    }
+}
+
+// Function to resume music
+function resumeBackgroundMusic() {
+    if (audioPlayer && audioPlayer.paused && musicPlayed) {
+        audioPlayer.play();
+        debugLog("Background music resumed");
+    }
+}
+
+// Function to set volume (0 to 1)
+function setMusicVolume(volume) {
+    if (audioPlayer) {
+        audioPlayer.volume = Math.max(0, Math.min(1, volume));
+        debugLog(`Music volume set to ${audioPlayer.volume}`);
+    }
+}
+
 // ==================== INITIALIZATION ====================
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -572,7 +608,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadAboutMe();
     await loadNews();
     await loadImageGallery();
-    await loadFacebookPosts();
     await loadVideoGallery();
     await initBackgroundMusic();
     
@@ -589,7 +624,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Throttled scroll event for active nav links (prevents jumping)
     let ticking = false;
     window.addEventListener('scroll', () => {
-        // Skip if carousel is sliding (previos menu icon flicker)
+        // Skip if carousel is sliding (prevents menu icon flicker)
         if (isCarouselSliding) return;
         
         if (!ticking) {

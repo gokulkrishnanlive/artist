@@ -417,7 +417,7 @@ body {
     justify-content: center;
     align-items: center;
     gap: 12px;
-    z-index: 1050;
+    /*z-index: 1050;*/
     pointer-events: auto;
 }
 

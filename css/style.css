@@ -350,7 +350,7 @@ body {
 .hero-slider {
     height: auto;
     position: relative;
-    margin-top: 0 !important;
+    margin-top: -5px !important;
     width: 100%;
     margin-bottom: 60px;
     overflow: visible !important;
@@ -358,7 +358,7 @@ body {
 
 #home {
     padding: 0 !important;
-    margin: 0 !important;
+    margin: 0 ;
     overflow: visible !important;
 }
 
@@ -1083,7 +1083,7 @@ html {
     }
     
     .carousel-indicators {
-        bottom: -35px;
+       /* bottom: -35px;*/
         gap: 10px;
     }
     
@@ -1123,7 +1123,7 @@ html {
     }
     
     .carousel-indicators {
-        bottom: -30px;
+        /*bottom: -30px;*/
         gap: 8px;
     }
     

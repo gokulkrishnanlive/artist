@@ -292,18 +292,25 @@ body {
     border-radius: 2px;
 }
 
-/* Hero Slider - No Gap */
+/* ============================================ */
+/* HERO SLIDER - FULL VIEWPORT HEIGHT */
+/* ============================================ */
+
 .hero-slider {
-    height: auto;
-    overflow: hidden;
+    height: 100vh;
+    min-height: 500px;
+    max-height: 800px;
+    overflow: visible !important;
     position: relative;
     margin-top: 0 !important;
     width: 100%;
+    margin-bottom: 60px;
 }
 
 #home {
     padding: 0 !important;
     margin: 0 !important;
+    overflow: visible !important;
 }
 
 .hero-slide {
@@ -312,19 +319,165 @@ body {
     position: relative;
 }
 
+/* Ensure images cover the entire slide area without distortion */
+.hero-slide-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
 /* REMOVED BLACK OVERLAY */
 .hero-slide::after {
     display: none !important;
     background: none !important;
 }
 
-.hero-slide-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+/* ============================================ */
+/* HERO SLIDER CAPTION STYLES */
+/* ============================================ */
+
+.hero-caption {
+    position: absolute;
+    bottom: 20%;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 15;
+    padding: 0 20px;
+    animation: fadeInUp 0.8s ease-out;
+    pointer-events: none;
 }
 
-/* SIMPLE RED ARROWS - No background */
+.hero-caption-content {
+    display: inline-block;
+    max-width: 80%;
+    background: linear-gradient(135deg, rgba(0,0,0,0.7), rgba(0,0,0,0.5));
+    backdrop-filter: blur(10px);
+    padding: 20px 40px;
+    border-radius: 15px;
+    border-left: 4px solid #ff0000;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    pointer-events: auto;
+}
+
+.hero-caption-title {
+    color: white;
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 15px 0;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: -0.02em;
+}
+
+.hero-caption-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #ff0000, #cc0000);
+    color: white;
+    padding: 10px 25px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255,0,0,0.3);
+}
+
+.hero-caption-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255,0,0,0.4);
+    background: linear-gradient(135deg, #ff3333, #ff0000);
+    color: white;
+}
+
+.hero-caption-btn i {
+    transition: transform 0.3s ease;
+}
+
+.hero-caption-btn:hover i {
+    transform: translateX(5px);
+}
+
+/* ============================================ */
+/* HERO SLIDER INDICATORS (DOTS) - VISIBLE FIX */
+/* ============================================ */
+
+.carousel-indicators {
+    position: absolute;
+    bottom: -40px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    z-index: 1050;
+    pointer-events: auto;
+}
+
+.carousel-indicators button {
+    width: 12px !important;
+    height: 12px !important;
+    border-radius: 50% !important;
+    margin: 0 !important;
+    background-color: rgba(128, 128, 128, 0.8) !important;
+    border: none !important;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    padding: 0;
+    opacity: 1;
+    text-indent: 0;
+}
+
+[data-bs-theme="dark"] .carousel-indicators button {
+    background-color: rgba(200, 200, 200, 0.8) !important;
+}
+
+.carousel-indicators button.active {
+    background-color: #ff0000 !important;
+    transform: scale(1.3);
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.5), 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.carousel-indicators button:hover {
+    transform: scale(1.15);
+    background-color: #ff4444 !important;
+}
+
+/* Ensure carousel container doesn't clip the indicators */
+#heroCarousel {
+    height: 100%;
+    overflow: visible !important;
+}
+
+.carousel {
+    overflow: visible !important;
+}
+
+.carousel-inner {
+    height: 100%;
+    overflow: visible !important;
+}
+
+.carousel-item {
+    height: 100%;
+}
+
+.carousel-item.active {
+    height: 100%;
+}
+
+/* ============================================ */
+/* HERO SLIDER ARROWS */
+/* ============================================ */
+
 .simple-slider-arrow {
     position: absolute;
     top: 50%;
@@ -333,7 +486,7 @@ body {
     border: none;
     color: #ff0000 !important;
     font-size: 3rem;
-    z-index: 10;
+    z-index: 15;
     transition: all 0.3s;
     cursor: pointer;
     opacity: 0.7;
@@ -356,25 +509,16 @@ body {
     right: 20px;
 }
 
-/* Hero slider indicators */
-.carousel-indicators {
-    bottom: 30px;
-    z-index: 10;
-}
-
-.carousel-indicators button {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    margin: 0 6px;
-    background-color: rgba(255, 255, 255, 0.5);
-    border: 2px solid transparent;
-}
-
-.carousel-indicators button.active {
-    background-color: #ff0000;
-    border-color: white;
-    transform: scale(1.2);
+/* Caption Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Alternate section backgrounds */
@@ -385,6 +529,7 @@ section {
 
 #about {
     background-color: var(--section-light) !important;
+    margin-top: 20px;
 }
 
 #news {
@@ -483,14 +628,31 @@ section {
     width: 100%;
     overflow: hidden;
     padding: 0 15px;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.card-carousel-container:active {
+    cursor: grabbing;
 }
 
 .card-carousel-inner {
     display: flex;
-    transition: transform 0.5s ease;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     width: max-content;
     gap: 30px;
     padding: 10px 0;
+    will-change: transform;
+}
+
+/* Disable text selection while swiping */
+.card-carousel-container.swiping {
+    cursor: grabbing;
+}
+
+.card-carousel-container.swiping .carousel-card {
+    pointer-events: none;
 }
 
 /* Individual card styling for carousel */
@@ -690,7 +852,7 @@ section {
 .about-badge-wrapper {
     display: flex;
     justify-content: center;
-	margin-top: -5rem;
+    margin-top: -5rem;
     margin-bottom: 1.5rem;
 }
 
@@ -734,155 +896,12 @@ section {
     60% { transform: translateX(-50%) translateY(-7px); }
 }
 
-/* ============================================ */
-/* FIXED: Hero Slider Arrows - Mobile Responsive */
-/* ============================================ */
-
-/* Base styles already set above, now override for mobile */
-@media (max-width: 768px) {
-    .hero-slider {
-        height: 400px;
-    }
-    
-    .section-title {
-        font-size: 1.8rem;
-    }
-    
-    section {
-        padding: 70px 0;
-    }
-    
-    .simple-slider-arrow {
-        font-size: 2rem;
-    }
-    
-    .simple-carousel-control {
-        font-size: 1.8rem;
-    }
-    
-    .simple-carousel-control.prev {
-        left: 8px;
-    }
-    
-    .simple-carousel-control.next {
-        right: 8px;
-    }
-    
-    .card-carousel-container {
-        padding: 0 8px;
-    }
-    
-    .carousel-card {
-        width: 250px;
-        min-width: 250px;
-    }
-}
-
-/* CRITICAL FIX: Ensure arrows stay at edges on small devices */
-@media (max-width: 576px) {
-    .hero-slider {
-        height: 350px;
-    }
-    
-    /* Hero slider arrows - force left/right edges */
-    .hero-slider .simple-slider-arrow {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 2rem;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: transparent !important;
-        color: #ff0000 !important;
-        opacity: 0.8;
-        z-index: 15;
-        cursor: pointer;
-        padding: 0;
-        margin: 0;
-    }
-    
-    /* Left arrow - stick to left edge */
-    .hero-slider .simple-slider-arrow.prev {
-        left: 8px !important;
-        right: auto !important;
-    }
-    
-    /* Right arrow - stick to right edge */
-    .hero-slider .simple-slider-arrow.next {
-        right: 8px !important;
-        left: auto !important;
-    }
-    
-    /* Reset any potential centering */
-    .hero-slider .simple-slider-arrow {
-        left: auto;
-        right: auto;
-    }
-    
-    /* Other carousel arrows */
-    .simple-carousel-control {
-        font-size: 1.5rem;
-    }
-    
-    .simple-carousel-control.prev {
-        left: 5px;
-    }
-    
-    .simple-carousel-control.next {
-        right: 5px;
-    }
-    
-    .card-carousel-container {
-        padding: 0 5px;
-    }
-    
-    .carousel-card {
-        width: 220px;
-        min-width: 220px;
-    }
-}
-
-/* Tablet landscape fix */
-@media (min-width: 577px) and (max-width: 768px) {
-    .hero-slider .simple-slider-arrow.prev {
-        left: 12px !important;
-        right: auto !important;
-    }
-    .hero-slider .simple-slider-arrow.next {
-        right: 12px !important;
-        left: auto !important;
-    }
-}
-
-/* Desktop large screens */
-@media (min-width: 992px) {
-    .navbar-expand-lg .navbar-toggler {
-        display: block !important;
-    }
-}
-
 /* Smooth scrolling offset */
 html {
     scroll-padding-top: 76px;
     scroll-behavior: smooth;
 }
 
-/* Debug styles (hidden by default) */
-.debug-info {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    background: rgba(0,0,0,0.8);
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    font-size: 12px;
-    z-index: 9999;
-    display: none;
-}
 /* Music hint animations */
 @keyframes slideIn {
     from {
@@ -931,4 +950,239 @@ html {
 @keyframes pulse {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.5; }
+}
+
+/* Debug styles (hidden by default) */
+.debug-info {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    z-index: 9999;
+    display: none;
+}
+
+/* ============================================ */
+/* RESPONSIVE STYLES FOR HERO SLIDER */
+/* ============================================ */
+
+@media (max-width: 992px) {
+    .hero-slider {
+        height: 70vh;
+        min-height: 450px;
+        max-height: 600px;
+    }
+    
+    .hero-caption {
+        bottom: 18%;
+    }
+    
+    .hero-caption-content {
+        padding: 15px 30px;
+        max-width: 85%;
+    }
+    
+    .hero-caption-title {
+        font-size: 1.6rem;
+        margin-bottom: 10px;
+    }
+    
+    .hero-caption-btn {
+        padding: 8px 20px;
+        font-size: 0.9rem;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+    }
+    
+    section {
+        padding: 70px 0;
+    }
+    
+    .simple-carousel-control {
+        font-size: 1.8rem;
+    }
+    
+    .simple-carousel-control.prev {
+        left: 8px;
+    }
+    
+    .simple-carousel-control.next {
+        right: 8px;
+    }
+    
+    .card-carousel-container {
+        padding: 0 8px;
+    }
+    
+    .carousel-card {
+        width: 250px;
+        min-width: 250px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-slider {
+        height: 60vh;
+        min-height: 400px;
+        max-height: 500px;
+    }
+    
+    .hero-caption {
+        bottom: 15%;
+    }
+    
+    .hero-caption-content {
+        padding: 12px 25px;
+        max-width: 90%;
+    }
+    
+    .hero-caption-title {
+        font-size: 1.3rem;
+        margin-bottom: 8px;
+    }
+    
+    .hero-caption-btn {
+        padding: 6px 16px;
+        font-size: 0.85rem;
+    }
+    
+    .carousel-indicators {
+        bottom: -35px;
+        gap: 10px;
+    }
+    
+    .carousel-indicators button {
+        width: 10px !important;
+        height: 10px !important;
+    }
+    
+    .simple-slider-arrow {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-slider {
+        height: 50vh;
+        min-height: 350px;
+        max-height: 450px;
+        margin-bottom: 50px;
+    }
+    
+    .hero-caption {
+        bottom: 12%;
+    }
+    
+    .hero-caption-content {
+        padding: 10px 20px;
+        max-width: 95%;
+    }
+    
+    .hero-caption-title {
+        font-size: 1rem;
+        margin-bottom: 6px;
+    }
+    
+    .hero-caption-btn {
+        padding: 5px 12px;
+        font-size: 0.75rem;
+        gap: 5px;
+    }
+    
+    .carousel-indicators {
+        bottom: -30px;
+        gap: 8px;
+    }
+    
+    .carousel-indicators button {
+        width: 8px !important;
+        height: 8px !important;
+    }
+    
+    /* Hero slider arrows - force left/right edges */
+    .hero-slider .simple-slider-arrow {
+        font-size: 1.8rem;
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .hero-slider .simple-slider-arrow.prev {
+        left: 8px !important;
+        right: auto !important;
+    }
+    
+    .hero-slider .simple-slider-arrow.next {
+        right: 8px !important;
+        left: auto !important;
+    }
+    
+    .simple-carousel-control {
+        font-size: 1.5rem;
+    }
+    
+    .simple-carousel-control.prev {
+        left: 5px;
+    }
+    
+    .simple-carousel-control.next {
+        right: 5px;
+    }
+    
+    .card-carousel-container {
+        padding: 0 5px;
+    }
+    
+    .carousel-card {
+        width: 220px;
+        min-width: 220px;
+    }
+}
+
+/* Tablet landscape fix */
+@media (min-width: 577px) and (max-width: 768px) {
+    .hero-slider .simple-slider-arrow.prev {
+        left: 12px !important;
+        right: auto !important;
+    }
+    .hero-slider .simple-slider-arrow.next {
+        right: 12px !important;
+        left: auto !important;
+    }
+}
+
+/* Desktop large screens */
+@media (min-width: 992px) {
+    .navbar-expand-lg .navbar-toggler {
+        display: block !important;
+    }
+}
+
+/* ============================================ */
+/* TOUCH DEVICE OPTIMIZATIONS FOR CAROUSELS */
+/* ============================================ */
+
+@media (hover: none) and (pointer: coarse) {
+    .card-carousel-container {
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        cursor: default;
+    }
+    
+    .card-carousel-container .simple-carousel-control {
+        display: none;
+    }
+    
+    .carousel-card {
+        scroll-snap-align: start;
+    }
 }

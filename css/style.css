@@ -1195,7 +1195,7 @@ html {
     }
     
     .card-carousel-container .simple-carousel-control {
-        display: none;
+        /*display: none;*/
     }
     
     .carousel-card {

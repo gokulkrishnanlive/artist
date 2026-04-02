@@ -170,8 +170,8 @@ body {
 }
 
 .close-menu-btn.show {
-    display: block;
-    opacity: 1;
+    display: none;
+    /*opacity: 1;*/
 }
 
 .close-menu-btn:hover {
@@ -1053,7 +1053,7 @@ html {
     }
     
     .carousel-card {
-        width: 250px;
+       /* width: 250px;*/
         min-width: 250px;
     }
 }
@@ -1168,7 +1168,7 @@ html {
     }
     
     .carousel-card {
-        width: 220px;
+       /* width: 220px;*/
         min-width: 220px;
     }
 }

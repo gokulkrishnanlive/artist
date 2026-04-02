@@ -737,7 +737,7 @@ section {
 
 .view-btn {
     display: inline-block;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    background:linear-gradient(135deg, var(--primary-color), #005ef7);
     color: white;
     padding: 0.5rem 1.5rem;
     border-radius: 25px;

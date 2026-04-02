@@ -19,7 +19,7 @@
 /* Google Chrome Dark Theme Colors */
 [data-bs-theme="dark"] {
     --primary-color: #8ab4f8;
-    --secondary-color: #aecbfa;
+    --secondary-color:  #0060fb;
     --accent-color: #81c995;
     --gradient-start: #8ab4f8;
     --gradient-end: #81c995;
@@ -37,7 +37,7 @@
 
 [data-bs-theme="light"] {
     --primary-color: #4a6fa5;
-    --secondary-color: #166088;
+    --secondary-color: #0060fb;
     --accent-color: #17a2b8;
     --gradient-start: #4a6fa5;
     --gradient-end: #17a2b8;

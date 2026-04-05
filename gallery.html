@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Image Gallery | Gokullive Official</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Image Gallery from Gokul G. - District Coordinator at Treasury Department Kerala | Carnatic Music Enthusiast | Latest announcements and events">
+    <meta name="keywords" content="Gokul G. gallery, Gokullive updates, Kerala Government gallery, Treasury Department gallery, Carnatic Music events">
+    <meta name="author" content="Gokul G.">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://gokulkrishnanlive.github.io/artist/gallery.html">
+    
+    <!-- Favicon -->
+    <link href="images/favicon.svg" rel="apple-touch-icon" sizes="152x152">
+    <link href="images/favicon.svg" rel="icon" type="image/x-icon">
+    <link href="images/favicon.svg" rel="shortcut icon" type="image/x-icon">
+    
+    <!-- Resource Hints -->
+    <link rel="preload" href="css/bootstrap.min.css" as="style">
+    <link rel="preload" href="css/style.css" as="style">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="css/inter.css" rel="stylesheet">
+    <link href="css/outfit.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Additional Grid View Styles -->
+    <style>
+        /* News Grid Page Specific Styles */
+        .gallery-grid-page {
+            background-color: var(--bg-color);
+            min-height: 100vh;
+        }
+        
+        .gallery-grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .gallery-grid-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .gallery-grid-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px var(--shadow-color);
+        }
+        
+        .gallery-grid-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .gallery-grid-card:hover .gallery-grid-image {
+            transform: scale(1.05);
+        }
+        
+        .gallery-grid-image-wrapper {
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .gallery-grid-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .gallery-grid-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--title-color);
+            font-family: 'Outfit', sans-serif;
+            line-height: 1.3;
+        }
+        
+        .gallery-grid-content {
+            color: var(--text-color);
+            opacity: 0.85;
+            line-height: 1.6;
+            margin-bottom: 1.25rem;
+            flex-grow: 1;
+        }
+        
+        .gallery-grid-footer {
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .gallery-read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 8px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .gallery-read-more:hover {
+            transform: translateX(5px);
+            color: white;
+            box-shadow: 0 4px 12px var(--shadow-color);
+        }
+        
+        .back-to-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: 1px solid var(--border-color);
+        }
+        
+        .back-to-home:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .loading-spinner {
+            text-align: center;
+            padding: 60px 0;
+        }
+        
+        .no-gallery-message {
+            text-align: center;
+            padding: 60px 20px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            margin: 40px 0;
+        }
+        
+        .no-gallery-message i {
+            font-size: 4rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        
+        @media (max-width: 768px) {
+            .gallery-grid-container {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 20px;
+            }
+            
+            .gallery-grid-title {
+                font-size: 1.2rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .gallery-grid-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar (Simplified - Only Back to Home) -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="index.html">
+                <img id="site-logo" src="./images/gokullive.svg" alt="Gokullive Official Logo" height="45" class="me-2" onerror="this.src='https://placehold.co/45x45?text=GL'">
+                <div class="d-flex flex-column">
+                    <span class="fw-bold fs-4">Gokullive Official</span>
+                </div>
+            </a>
+            
+            <button class="navbar-toggler" type="button" aria-label="Toggle navigation menu" id="navbarToggler">
+                <span class="line"></span>
+                <span class="line"></span>
+            </button>
+            
+            <button class="close-menu-btn" id="closeMenuBtn" aria-label="Close menu">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="navbar-overlay" id="navbarOverlay"></div>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">
+                            <i class="fas fa-home"></i> Back to Home
+                        </a>
+                    </li>
+                </ul>
+                <div class="nav-theme-toggle">
+                    <span><i class="fas fa-palette me-2"></i> Theme</span>
+                    <button class="toggle-theme-btn" id="themeToggle" aria-label="Toggle dark/light theme"><i class="fas fa-moon"></i></button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- News Page Content -->
+    <section class="gallery-grid-page py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
+                        <h1 class="section-title" style="margin-bottom: 0;">Image Gallery</h1>
+                       
+                    </div>
+                    <p class="text-muted mb-4"></p>
+                </div>
+            </div>
+            
+            <!-- News Grid Container -->
+            <div id="gallery-grid-container" class="gallery-grid-container">
+                <div class="loading-spinner">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading gallery...</span>
+                    </div>
+                </div>
+				
+            </div>
+			<div style="text-align:center;"><br>
+			 <a href="index.html" class="back-to-home mt-2 mt-sm-0">
+                            <i class="fas fa-arrow-left"></i> Back to Home
+                        </a>
+        </div>
+		   </div>
+		
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 mx-auto">
+                    <div class="text-center mb-5">
+                        <h2 class="section-title">Contact Gokul G.</h2>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <h3 class="card-title h4 mb-4"><i class="fas fa-address-card me-2"></i> Contact Information</h3>
+                                    <p><i class="fas fa-phone me-2"></i> Phone: <a href="tel:+919495108708">+91 9495108708</a></p>
+                                    <p><i class="fas fa-envelope me-2"></i> Email: <a href="mailto:gokullive@hotmail.com">gokullive@hotmail.com</a></p>
+                                    <p><i class="fas fa-map-marker-alt me-2"></i> Location: Thiruvananthapuram, Kerala, India</p>
+                                    <p><i class="fas fa-briefcase me-2"></i> Position: District Coordinator, Treasury Department Kerala</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <h3 class="card-title h4 mb-4"><i class="fas fa-share-alt me-2"></i> Connect With Me</h3>
+                                    <div class="d-flex justify-content-center flex-wrap">
+                                        <a href="https://www.facebook.com/AmbadiGokulkrishnan" class="social-icon mb-3" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                                        <a href="https://twitter.com/imgokulkrishna" class="social-icon mb-3" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                                        <a href="https://www.instagram.com/AmbadiGokulkrishnan/" class="social-icon mb-3" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                                        <a href="https://www.youtube.com/channel/UC3TtAg-o71U-SxI0VxzNFqQ/videos" class="social-icon mb-3" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                                        <a href="https://thegokulliveblog.blogspot.com/" class="social-icon mb-3" target="_blank" rel="noopener noreferrer" aria-label="Blog"><i class="fas fa-blog"></i></a>
+                                        <a href="https://wa.me/919495108708?text=Hello%20Gokul%2C%20I%20visited%20your%20website." class="social-icon whatsapp mb-3" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-5">
+            <div class="text-center">
+                <p class="mb-2">&copy; 2023-2025 Gokullive Official. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // ==================== CONFIGURATION ====================
+        const DATABASE_ID = "189JXNzfCLPD1LipJBY8EG3tLZDYMkxXhCsku-_CNhFE";
+        const API_KEY = "AIzaSyBAuS3Brpsw5JOJnjNJii1UlFa7ClXf8d4";
+        
+        // DOM references
+        const themeToggle = document.getElementById('themeToggle');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const navbarOverlay = document.getElementById('navbarOverlay');
+        const navbarToggler = document.getElementById('navbarToggler');
+        const navbarCollapse = document.getElementById('navbarNav');
+        
+        // Helper functions
+        function debugLog(msg) { console.log(msg); }
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+        
+        // Theme handling
+        function detectTheme() {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+            const current = localStorage.getItem('theme');
+            if (current === 'dark' || (!current && prefersDark.matches)) {
+                document.documentElement.setAttribute('data-bs-theme', 'dark');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                document.documentElement.setAttribute('data-bs-theme', 'light');
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            const curr = document.documentElement.getAttribute('data-bs-theme');
+            if (curr === 'dark') {
+                document.documentElement.setAttribute('data-bs-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            } else {
+                document.documentElement.setAttribute('data-bs-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+        });
+        
+        // Mobile menu
+        function setupMobileMenu() {
+            navbarToggler.addEventListener('click', () => {
+                const expanded = navbarToggler.getAttribute('aria-expanded') === 'true';
+                if (expanded) {
+                    navbarToggler.setAttribute('aria-expanded', 'false');
+                    navbarCollapse.classList.remove('show');
+                    navbarOverlay.classList.remove('show');
+                    closeMenuBtn.classList.remove('show');
+                    navbarToggler.classList.remove('hidden');
+                } else {
+                    navbarToggler.setAttribute('aria-expanded', 'true');
+                    navbarCollapse.classList.add('show');
+                    navbarOverlay.classList.add('show');
+                    closeMenuBtn.classList.add('show');
+                    navbarToggler.classList.add('hidden');
+                }
+            });
+            navbarOverlay.addEventListener('click', closeMenu);
+            closeMenuBtn.addEventListener('click', closeMenu);
+            document.querySelectorAll('.nav-link').forEach(link => link.addEventListener('click', () => { closeMenu(); }));
+            document.addEventListener('keydown', (e) => { if(e.key === 'Escape' && navbarCollapse.classList.contains('show')) closeMenu(); });
+            function closeMenu() {
+                navbarToggler.setAttribute('aria-expanded', 'false');
+                navbarCollapse.classList.remove('show');
+                navbarOverlay.classList.remove('show');
+                closeMenuBtn.classList.remove('show');
+                navbarToggler.classList.remove('hidden');
+            }
+        }
+        
+        async function fetchSheetData(sheetName, range) {
+            try {
+                const url = `https://sheets.googleapis.com/v4/spreadsheets/${DATABASE_ID}/values/${sheetName}!${range}?key=${API_KEY}`;
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const data = await response.json();
+                return data.values || [];
+            } catch(e) { 
+                console.error(`Error fetching ${sheetName}:`, e); 
+                return []; 
+            }
+        }
+        
+        // Load News in Grid View - LATEST FIRST (reverse order)
+        async function loadNewsGrid() {
+            const container = document.getElementById('gallery-grid-container');
+            if (!container) return;
+            
+            try {
+                const newsData = await fetchSheetData('Image gallery', 'A2:D');
+                
+                if (!newsData || newsData.length === 0) {
+                    container.innerHTML = `
+                        <div class="no-gallery-message">
+                            <i class="fas fa-newspaper"></i>
+                            <h3>No News Available</h3>
+                            <p>Check back later for latest updates and announcements.</p>
+                            <a href="index.html" class="gallery-read-more" style="display: inline-flex; margin-top: 15px;">
+                                <i class="fas fa-home"></i> Back to Home
+                            </a>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // REVERSE THE ARRAY - Latest entries first (newest at the top)
+                const reversedNewsData = [...newsData].reverse();
+                
+                // Process gallery items
+                const newsItems = reversedNewsData.map(row => ({
+                    image: row[0] || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=600',
+                    title: row[1] || 'Untitled News',
+                    content: row[2] || 'No description available',
+                    link: row[3] || '#'
+                }));
+                
+                let html = '';
+                newsItems.forEach(item => {
+                    html += `
+                        <div class="gallery-grid-card">
+                            <div class="gallery-grid-image-wrapper">
+                                <img src="${escapeHtml(item.image)}" 
+                                     class="gallery-grid-image" 
+                                     alt="${escapeHtml(item.title)}"
+                                     onerror="this.src='https://placehold.co/600x400?text=News+Image'">
+                            </div>
+                            <div class="gallery-grid-body">
+                                <h3 class="gallery-grid-title">${escapeHtml(item.title)}</h3>
+                                <p class="gallery-grid-content">${escapeHtml(item.content)}</p>
+                                <div class="gallery-grid-footer">
+                                    <a href="${escapeHtml(item.link)}" class="gallery-read-more" target="_blank" rel="noopener noreferrer">
+                                        Read More <i class="fas fa-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                container.innerHTML = html;
+                debugLog(`Loaded ${newsItems.length} gallery items in grid view (latest first)`);
+                
+            } catch (error) {
+                console.error("Error loading gallery:", error);
+                container.innerHTML = `
+                    <div class="no-gallery-message">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Error Loading News</h3>
+                        <p>Unable to load gallery at this moment. Please try again later.</p>
+                        <a href="index.html" class="gallery-read-more" style="display: inline-flex; margin-top: 15px;">
+                            <i class="fas fa-home"></i> Back to Home
+                        </a>
+                    </div>
+                `;
+            }
+        }
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', async () => {
+            detectTheme();
+            setupMobileMenu();
+            await loadNewsGrid();
+            
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]:not([href="#"])').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    if(this.getAttribute('target') === '_blank') return;
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if(target) window.scrollTo({ top: target.offsetTop - 70, behavior: 'smooth' });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

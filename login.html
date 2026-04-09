@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <title>Login | Gokullive Official</title>
+    <meta name="description" content="Latest news and updates from Gokul G. - District Coordinator at Treasury Department Kerala | Carnatic Music Enthusiast | Latest announcements and events">
+    <meta name="keywords" content="Gokul G. news, Gokullive updates, Kerala Government news, Treasury Department news, Carnatic Music events">
+    <meta name="author" content="Gokul G.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://gokulkrishnanlive.github.io/artist/login.html">
+    <link href="images/favicon.svg" rel="apple-touch-icon" sizes="152x152">
+    <link href="images/favicon.svg" rel="icon" type="image/x-icon">
+    <link href="images/favicon.svg" rel="shortcut icon" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #000000;
+            border: none;
+        }
+
+        .fullscreen-iframe {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            border: none;
+            margin: 0;
+            padding: 0;
+            display: block;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        iframe {
+            display: block;
+        }
+
+        :focus {
+            outline: none;
+        }
+
+        body {
+            line-height: 0;
+            font-size: 0;
+        }
+
+        .home-overlay-btn {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 60px;
+            padding: 10px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            text-decoration: none;
+        }
+
+        .home-overlay-btn:hover {
+            background: rgba(0, 0, 0, 0.85);
+            transform: scale(1.02);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .home-overlay-btn:active {
+            transform: scale(0.98);
+        }
+
+        .home-icon {
+            width: 20px;
+            height: 20px;
+            filter: drop-shadow(0 1px 1px rgba(0,0,0,0.2));
+        }
+
+        .home-icon svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .btn-text {
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+            line-height: 1;
+        }
+
+        @media (max-width: 640px) {
+            .home-overlay-btn {
+                bottom: 16px;
+                left: 16px;
+                padding: 8px 16px;
+            }
+            .btn-text {
+                font-size: 13px;
+            }
+            .home-icon {
+                width: 18px;
+                height: 18px;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .home-overlay-btn {
+            animation: fadeInUp 0.4s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <iframe 
+        class="fullscreen-iframe"
+        src="https://script.google.com/macros/s/AKfycbwvy2tzYWsQK3tnBfaudqK3JX46waVYlqX55iUEIbxRz1gDF-r3-1rGHAwQkfcCq1i3/exec"
+        frameborder="0"
+        scrolling="no"
+        allow="fullscreen"
+        title="Gokullive Official Login"
+        loading="eager"
+        importance="high"
+        sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-scripts allow-modals allow-top-navigation allow-downloads"
+    ></iframe>
+    
+    <div class="home-overlay-btn" id="backToHomeBtn" role="button" aria-label="Back to home page">
+        <span class="home-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="20px" height="20px">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+        </span>
+        <span class="btn-text">Back to Home</span>
+    </div>
+    
+    <script>
+        (function() {
+            "use strict";
+            
+            const iframeEl = document.querySelector('.fullscreen-iframe');
+            
+            function enforceFullscreen() {
+                if (!iframeEl) return;
+                
+                iframeEl.style.position = 'fixed';
+                iframeEl.style.top = '0';
+                iframeEl.style.left = '0';
+                iframeEl.style.width = '100vw';
+                iframeEl.style.height = '100vh';
+                iframeEl.style.border = 'none';
+                iframeEl.style.margin = '0';
+                iframeEl.style.padding = '0';
+                iframeEl.style.display = 'block';
+                
+                document.documentElement.style.overflow = 'hidden';
+                document.body.style.overflow = 'hidden';
+                document.documentElement.style.margin = '0';
+                document.body.style.margin = '0';
+                document.documentElement.style.padding = '0';
+                document.body.style.padding = '0';
+                document.documentElement.style.height = '100%';
+                document.body.style.height = '100%';
+                
+                const style = document.createElement('style');
+                style.textContent = `
+                    ::-webkit-scrollbar {
+                        display: none;
+                    }
+                    body, html {
+                        scrollbar-width: none;
+                        -ms-overflow-style: none;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            window.addEventListener('resize', function() {
+                if (iframeEl) {
+                    iframeEl.style.width = '100vw';
+                    iframeEl.style.height = '100vh';
+                }
+            });
+            
+            window.addEventListener('orientationchange', function() {
+                setTimeout(function() {
+                    if (iframeEl) {
+                        iframeEl.style.width = '100vw';
+                        iframeEl.style.height = '100vh';
+                    }
+                }, 10);
+            });
+            
+            if (iframeEl) {
+                iframeEl.addEventListener('load', function() {
+                    iframeEl.style.width = '100vw';
+                    iframeEl.style.height = '100vh';
+                    document.documentElement.style.overflow = 'hidden';
+                    document.body.style.overflow = 'hidden';
+                });
+            }
+            
+            enforceFullscreen();
+            
+            const homeButton = document.getElementById('backToHomeBtn');
+            
+            if (homeButton) {
+                const navigateToHome = function(event) {
+                    if (event) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    
+                    let targetUrl = './index.html';
+                    
+                    try {
+                        if (window.top && window.top !== window.self) {
+                            window.top.location.href = targetUrl;
+                        } else {
+                            window.location.href = targetUrl;
+                        }
+                    } catch (e) {
+                        window.location.href = targetUrl;
+                    }
+                };
+                
+                homeButton.addEventListener('click', navigateToHome);
+                
+                homeButton.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        navigateToHome(e);
+                    }
+                });
+                
+                homeButton.setAttribute('tabindex', '0');
+                homeButton.setAttribute('role', 'button');
+            }
+            
+            const observer = new MutationObserver(function() {
+                const btn = document.getElementById('backToHomeBtn');
+                if (btn && !btn.hasAttribute('data-listener-attached')) {
+                    btn.setAttribute('data-listener-attached', 'true');
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        window.location.href = './index.html';
+                    });
+                }
+            });
+            observer.observe(document.body, { childList: true, subtree: false });
+        })();
+    </script>
+</body>
+</html>

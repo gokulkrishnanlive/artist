@@ -1227,3 +1227,28 @@ html {
         align-self: flex-start;
     }
 }
+/* Install App Button Animation */
+@keyframes slideUp {
+    from {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+#install-prompt {
+    animation: slideUp 0.5s ease-out;
+    z-index: 10000 !important;
+}
+
+#install-prompt button {
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+#install-prompt button:hover {
+    transform: scale(1.05);
+}

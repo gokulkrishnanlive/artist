@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Gallery | Gokullive Official</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Media gallery from Google Drive - Images and Videos from Gokul G., District Coordinator at Treasury Department Kerala">
+    <meta name="keywords" content="Gokul G. gallery, drive gallery, media gallery, Kerala Treasury photos, Carnatic Music videos">
+    <meta name="author" content="Gokul G.">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://gokulkrishnanlive.github.io/artist/drive-gallery.html">
+    
+    <!-- Favicon -->
+    <link href="../images/favicon.svg" rel="apple-touch-icon" sizes="152x152">
+    <link href="../images/favicon.svg" rel="icon" type="image/x-icon">
+    <link href="../images/favicon.svg" rel="shortcut icon" type="image/x-icon">
+    
+    <!-- Resource Hints -->
+    <link rel="preload" href="../css/bootstrap.min.css" as="style">
+    <link rel="preload" href="../css/style.css" as="style">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="../css/inter.css" rel="stylesheet">
+    <link href="../css/outfit.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+    
+    <!-- Drive Gallery Specific Styles -->
+    <style>
+        /* ============================================ */
+        /* DRIVE GALLERY - MOBILE FIRST GRID VIEW */
+        /* ============================================ */
+        
+        .drive-gallery-page {
+            background-color: var(--bg-color);
+            min-height: 100vh;
+        }
+        
+        /* Gallery Grid - Like Mobile Gallery App */
+        .drive-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+            margin-top: 20px;
+        }
+        
+        /* Gallery Item */
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            cursor: pointer;
+            background: var(--card-bg);
+            border-radius: 8px;
+        }
+        
+        .gallery-item img,
+        .gallery-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-item:hover img,
+        .gallery-item:hover video {
+            transform: scale(1.05);
+        }
+        
+        /* Video Play Icon Overlay */
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .gallery-item:hover .video-overlay {
+            opacity: 1;
+        }
+        
+        .video-overlay i {
+            font-size: 3rem;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+        
+        /* File Type Badge */
+        .file-type-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            backdrop-filter: blur(4px);
+            z-index: 2;
+        }
+        
+        /* ============================================ */
+        /* FULLSCREEN MODAL/POPUP VIEWER */
+        /* ============================================ */
+        
+        .media-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 10000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .media-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-media-container {
+            width: 90%;
+            max-width: 1200px;
+            max-height: 85vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .modal-media {
+            max-width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+        }
+        
+        .modal-video-iframe {
+            width: 100%;
+            height: 70vh;
+            min-height: 400px;
+            border: none;
+        }
+        
+        /* Close Button */
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+        }
+        
+        .modal-close:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+        
+        /* Navigation Arrows */
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+        }
+        
+        .modal-nav:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+        
+        .modal-nav.prev {
+            left: 20px;
+        }
+        
+        .modal-nav.next {
+            right: 20px;
+        }
+        
+        /* Counter */
+        .media-counter {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            backdrop-filter: blur(10px);
+            z-index: 10001;
+        }
+        
+        /* Download Button */
+        .download-btn {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.6);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+        }
+        
+        .download-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+        
+        /* Image Viewer Controls */
+        .image-viewer-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            background: rgba(0,0,0,0.6);
+            padding: 10px 20px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            z-index: 10001;
+        }
+        
+        .viewer-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .viewer-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.1);
+        }
+        
+        /* Loading Spinner */
+        .loading-spinner {
+            text-align: center;
+            padding: 60px 0;
+            grid-column: 1/-1;
+        }
+        
+        /* Empty State */
+        .drive-empty {
+            text-align: center;
+            padding: 60px 20px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            margin: 40px 0;
+            grid-column: 1/-1;
+        }
+        
+        .drive-empty i {
+            font-size: 4rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        
+        /* Folder Info */
+        .folder-info {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            padding: 20px;
+            border-radius: 16px;
+            color: white;
+            margin-bottom: 20px;
+        }
+        
+        .folder-info h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .folder-info p {
+            margin: 10px 0 0;
+            opacity: 0.9;
+        }
+        
+        /* Buttons */
+        .back-to-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: 1px solid var(--border-color);
+        }
+        
+        .back-to-home:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .refresh-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 8px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+        
+        /* Responsive */
+        @media (min-width: 576px) {
+            .drive-gallery-grid { grid-template-columns: repeat(4, 1fr); gap: 6px; }
+        }
+        @media (min-width: 768px) {
+            .drive-gallery-grid { grid-template-columns: repeat(5, 1fr); gap: 8px; }
+        }
+        @media (min-width: 992px) {
+            .drive-gallery-grid { grid-template-columns: repeat(6, 1fr); gap: 10px; }
+        }
+        @media (min-width: 1200px) {
+            .drive-gallery-grid { grid-template-columns: repeat(8, 1fr); gap: 12px; }
+        }
+        
+        @media (max-width: 768px) {
+            .modal-nav { width: 40px; height: 40px; font-size: 1.2rem; }
+            .modal-nav.prev { left: 10px; }
+            .modal-nav.next { right: 10px; }
+            .modal-video-iframe { height: 50vh; min-height: 300px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="../index.html">
+                <img id="site-logo" src="../images/gokullive.svg" alt="Gokullive Official Logo" height="45" class="me-2" onerror="this.src='https://placehold.co/45x45?text=GL'">
+                <div class="d-flex flex-column">
+                    <span class="fw-bold fs-4" id="site-name">Gokullive Official</span>
+                </div>
+            </a>
+            
+            <button class="navbar-toggler" type="button" aria-label="Toggle navigation menu" id="navbarToggler">
+                <span class="line"></span>
+                <span class="line"></span>
+            </button>
+            
+            <button class="close-menu-btn" id="closeMenuBtn" aria-label="Close menu">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="navbar-overlay" id="navbarOverlay"></div>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="../index.html#home"><i class="fas fa-home"></i> Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../index.html#about"><i class="fas fa-user"></i> About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../news.html"><i class="fas fa-newspaper"></i> Latest News</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../gallery.html"><i class="fas fa-images"></i> Image Gallery</a></li>
+              
+                    <li class="nav-item"><a class="nav-link" href="../index.html#video"><i class="fas fa-video"></i> Video Gallery</a></li>
+                    <li class="nav-item"><a class="nav-link" href="https://thegokulliveblog.blogspot.com/" target="_blank" rel="noopener noreferrer"><i class="fas fa-blog"></i> Blogs</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../index.html#contact"><i class="fas fa-address-book"></i> Contact</a></li>
+                </ul>
+                <div class="nav-theme-toggle">
+                    <span><i class="fas fa-palette me-2"></i> Theme</span>
+                    <button class="toggle-theme-btn" id="themeToggle" aria-label="Toggle dark/light theme"><i class="fas fa-moon"></i></button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Drive Gallery Content -->
+    <section class="drive-gallery-page py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
+                        <h1 class="section-title" style="margin-bottom: 0;">My Marriage Album - Part 1</h1>
+                     
+                    </div>
+                </div>
+            </div>
+            
+          <!-- Folder Info Section with Buttons at Right End -->
+     <div class="folder-info" id="folderInfo">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+            <h2><i class="fas fa-photo-video"></i> <span id="folderTitle">Loading Gallery...</span></h2>
+            <p id="folderDescription" class="mb-0">Fetching media files...</p>
+        </div>
+        <div class="d-flex gap-2">
+            <button class="refresh-btn" onclick="loadDriveGallery()">
+                <i class="fas fa-sync-alt me-2"></i> Refresh
+            </button>
+         
+        </div>
+       </div>
+    </div>
+            
+            <!-- Gallery Grid -->
+            <div id="drive-gallery-grid" class="drive-gallery-grid">
+                <div class="loading-spinner">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3">Loading media...</p>
+                </div>
+            </div>
+			
+			<div style="text-align:center;"><br>
+			 <a href="../index.html" class="back-to-home mt-2 mt-sm-0">
+                            <i class="fas fa-arrow-left"></i> Back to Home
+                        </a>
+        </div>
+		
+        </div>
+		
+    </section>
+  
+    <!-- Footer -->
+    <footer id="contact" class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 mx-auto">
+                    <div class="text-center mb-5">
+                        <h2 class="section-title">Contact Gokul</h2>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <h3 class="card-title h4 mb-4"><i class="fas fa-address-card me-2"></i> Contact Information</h3>
+                                    <p><i class="fas fa-phone me-2"></i> Phone: <a href="tel:+919495108708">+91 9495108708</a></p>
+                                    <p><i class="fas fa-envelope me-2"></i> Email: <a href="mailto:gokullive@hotmail.com">gokullive@hotmail.com</a></p>
+                                    <p><i class="fas fa-map-marker-alt me-2"></i> Location: Thiruvananthapuram, Kerala, India</p>
+                                    <p><i class="fas fa-briefcase me-2"></i> Position: District Coordinator, Treasury Department Kerala</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <h3 class="card-title h4 mb-4"><i class="fas fa-share-alt me-2"></i> Connect With Me</h3>
+                                    <div class="d-flex justify-content-center flex-wrap">
+                                        <a href="https://www.facebook.com/AmbadiGokulkrishnan" class="social-icon mb-3" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                                        <a href="https://twitter.com/imgokulkrishna" class="social-icon mb-3" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                                        <a href="https://www.instagram.com/AmbadiGokulkrishnan/" class="social-icon mb-3" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                                        <a href="https://www.youtube.com/channel/UC3TtAg-o71U-SxI0VxzNFqQ/videos" class="social-icon mb-3" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                                        <a href="https://thegokulliveblog.blogspot.com/" class="social-icon mb-3" target="_blank" rel="noopener noreferrer" aria-label="Blog"><i class="fas fa-blog"></i></a>
+                                        <a href="https://wa.me/919495108708?text=Hello%20Gokul%2C%20I%20visited%20your%20website." class="social-icon whatsapp mb-3" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-5">
+            <div class="text-center">
+                <p class="mb-2">&copy; 2023-2025 Gokullive Official. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Media Modal Popup -->
+    <div id="mediaModal" class="media-modal">
+        <div class="modal-content-wrapper">
+            <button class="modal-close" onclick="closeModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <button class="modal-nav prev" onclick="navigateMedia(-1)">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="modal-nav next" onclick="navigateMedia(1)">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            <div class="media-counter" id="mediaCounter"></div>
+            <button class="download-btn" onclick="downloadCurrentMedia()">
+                <i class="fas fa-download"></i>
+            </button>
+            <div id="modalMediaContainer" class="modal-media-container"></div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+       
+        const FOLDER_ID = "1EHeknWF46nurrXD4_6d8HDdRVcqbYb3H";  
+        
+        // Gallery Title and Description
+        const GALLERY_TITLE = "Part1";
+        const GALLERY_DESCRIPTION = "Images and videos from - My Marriage Album- Part 1";
+        
+        // Google Drive API Key
+        const DRIVE_API_KEY = "AIzaSyBAuS3Brpsw5JOJnjNJii1UlFa7ClXf8d4";
+        
+        // ==================== END OF USER CONFIGURATION ====================
+        
+        // DOM references
+        const themeToggle = document.getElementById('themeToggle');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const navbarOverlay = document.getElementById('navbarOverlay');
+        const navbarToggler = document.getElementById('navbarToggler');
+        const navbarCollapse = document.getElementById('navbarNav');
+        
+        // Gallery Data
+        let mediaItems = [];
+        let currentMediaIndex = 0;
+        let currentScale = 1;
+        
+        // Theme handling
+        function detectTheme() {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+            const current = localStorage.getItem('theme');
+            if (current === 'dark' || (!current && prefersDark.matches)) {
+                document.documentElement.setAttribute('data-bs-theme', 'dark');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                document.documentElement.setAttribute('data-bs-theme', 'light');
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            const curr = document.documentElement.getAttribute('data-bs-theme');
+            if (curr === 'dark') {
+                document.documentElement.setAttribute('data-bs-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            } else {
+                document.documentElement.setAttribute('data-bs-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+        });
+        
+        // Mobile menu
+        function setupMobileMenu() {
+            navbarToggler.addEventListener('click', () => {
+                const expanded = navbarToggler.getAttribute('aria-expanded') === 'true';
+                if (expanded) {
+                    navbarToggler.setAttribute('aria-expanded', 'false');
+                    navbarCollapse.classList.remove('show');
+                    navbarOverlay.classList.remove('show');
+                    closeMenuBtn.classList.remove('show');
+                    navbarToggler.classList.remove('hidden');
+                } else {
+                    navbarToggler.setAttribute('aria-expanded', 'true');
+                    navbarCollapse.classList.add('show');
+                    navbarOverlay.classList.add('show');
+                    closeMenuBtn.classList.add('show');
+                    navbarToggler.classList.add('hidden');
+                }
+            });
+            navbarOverlay.addEventListener('click', closeMenu);
+            closeMenuBtn.addEventListener('click', closeMenu);
+            document.querySelectorAll('.nav-link').forEach(link => link.addEventListener('click', () => { closeMenu(); }));
+            document.addEventListener('keydown', (e) => { if(e.key === 'Escape' && navbarCollapse.classList.contains('show')) closeMenu(); });
+            function closeMenu() {
+                navbarToggler.setAttribute('aria-expanded', 'false');
+                navbarCollapse.classList.remove('show');
+                navbarOverlay.classList.remove('show');
+                closeMenuBtn.classList.remove('show');
+                navbarToggler.classList.remove('hidden');
+            }
+        }
+        
+        // Update folder info
+        function updateFolderInfo() {
+            document.getElementById('folderTitle').innerText = GALLERY_TITLE;
+            document.getElementById('folderDescription').innerText = GALLERY_DESCRIPTION;
+        }
+        
+        // Get embeddable URL for Google Drive images (using Google's image cache)
+        function getEmbeddableImageUrl(fileId) {
+            // Using Google's content delivery network for images
+            return `https://lh3.googleusercontent.com/d/${fileId}=w1200-h1200`;
+        }
+        
+        // Get embeddable URL for videos
+        function getEmbeddableVideoUrl(fileId) {
+            return `https://drive.google.com/file/d/${fileId}/preview`;
+        }
+        
+        // Get thumbnail URL
+        function getThumbnailUrl(fileId) {
+            return `https://lh3.googleusercontent.com/d/${fileId}=w500`;
+        }
+        
+        // Get download URL
+        function getDownloadUrl(fileId) {
+            return `https://drive.google.com/uc?export=download&id=${fileId}`;
+        }
+        
+        // Fetch files from Google Drive
+        async function fetchDriveFiles() {
+            const container = document.getElementById('drive-gallery-grid');
+            container.innerHTML = `
+                <div class="loading-spinner">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3">Loading media files...</p>
+                </div>
+            `;
+            
+            try {
+                if (!FOLDER_ID || FOLDER_ID === 'YOUR_FOLDER_ID_HERE') {
+                    throw new Error('Please configure your Google Drive FOLDER_ID in the script');
+                }
+                
+                const query = `'${FOLDER_ID}' in parents and trashed=false`;
+                const response = await fetch(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&key=${DRIVE_API_KEY}&fields=files(id,name,mimeType)&pageSize=200`);
+                const data = await response.json();
+                
+                if (!data.files || data.files.length === 0) {
+                    container.innerHTML = `
+                        <div class="drive-empty">
+                            <i class="fas fa-folder-open"></i>
+                            <h3>No Media Found</h3>
+                            <p>The folder is empty or contains no supported media files.</p>
+                            <p class="text-muted mt-2">Make sure your folder ID is correct and the folder is shared publicly.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Filter images and videos
+                const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/bmp', 'image/jpg'];
+                const videoMimeTypes = ['video/mp4', 'video/mpeg', 'video/quicktime', 'video/x-msvideo', 'video/webm', 'video/ogg'];
+                
+                mediaItems = data.files.filter(file => {
+                    return imageMimeTypes.includes(file.mimeType) || videoMimeTypes.includes(file.mimeType);
+                }).map(file => ({
+                    id: file.id,
+                    name: file.name,
+                    mimeType: file.mimeType,
+                    isVideo: file.mimeType.startsWith('video/'),
+                    thumbnail: getThumbnailUrl(file.id),
+                    embedUrl: file.mimeType.startsWith('video/') ? getEmbeddableVideoUrl(file.id) : getEmbeddableImageUrl(file.id),
+                    downloadUrl: getDownloadUrl(file.id)
+                }));
+                
+                if (mediaItems.length === 0) {
+                    container.innerHTML = `
+                        <div class="drive-empty">
+                            <i class="fas fa-photo-video"></i>
+                            <h3>No Supported Media</h3>
+                            <p>No images or videos found in the folder.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                renderGalleryGrid();
+                
+            } catch (error) {
+                console.error('Error fetching Drive files:', error);
+                container.innerHTML = `
+                    <div class="drive-empty">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Error Loading Gallery</h3>
+                        <p>${error.message}</p>
+                        <p class="text-muted mt-2">Please check your FOLDER_ID configuration and make sure the folder is shared publicly.</p>
+                        <button class="refresh-btn mt-3" onclick="loadDriveGallery()">
+                            <i class="fas fa-sync-alt"></i> Try Again
+                        </button>
+                    </div>
+                `;
+            }
+        }
+        
+        // Render gallery grid
+        function renderGalleryGrid() {
+            const container = document.getElementById('drive-gallery-grid');
+            let html = '';
+            
+            mediaItems.forEach((item, index) => {
+                html += `
+                    <div class="gallery-item" onclick="openMedia(${index})">
+                        ${item.isVideo ? '<div class="video-overlay"><i class="fas fa-play-circle"></i></div>' : ''}
+                        <div class="file-type-badge">
+                            <i class="fas ${item.isVideo ? 'fa-video' : 'fa-image'}"></i>
+                        </div>
+                        <img src="${item.thumbnail}" alt="${escapeHtml(item.name)}" loading="lazy" onerror="this.src='https://placehold.co/400x400?text=${item.isVideo ? 'Video' : 'Image'}&color=gray'">
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Open media in modal
+        function openMedia(index) {
+            currentMediaIndex = index;
+            currentScale = 1;
+            showMediaInModal();
+            document.getElementById('mediaModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Show current media in modal
+        function showMediaInModal() {
+            const item = mediaItems[currentMediaIndex];
+            const container = document.getElementById('modalMediaContainer');
+            
+            document.getElementById('mediaCounter').innerText = `${currentMediaIndex + 1} / ${mediaItems.length}`;
+            
+            if (item.isVideo) {
+                // For videos - use iframe embed
+                container.innerHTML = `
+                    <iframe 
+                        src="${item.embedUrl}" 
+                        class="modal-video-iframe"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                        allowfullscreen>
+                    </iframe>
+                `;
+            } else {
+                // For images - use img tag with zoom controls
+                container.innerHTML = `
+                    <div style="position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <img id="modalImage" class="modal-media" src="${item.embedUrl}" alt="${escapeHtml(item.name)}" style="transform: scale(${currentScale}); transition: transform 0.2s; cursor: pointer;" onclick="toggleZoom()">
+                        <div class="image-viewer-controls">
+                            <button class="viewer-btn" onclick="zoomOut()"><i class="fas fa-search-minus"></i></button>
+                            <button class="viewer-btn" onclick="resetZoom()"><i class="fas fa-undo-alt"></i></button>
+                            <button class="viewer-btn" onclick="zoomIn()"><i class="fas fa-search-plus"></i></button>
+                        </div>
+                    </div>
+                `;
+                
+                const modalImage = document.getElementById('modalImage');
+                modalImage.onerror = function() {
+                    this.src = 'https://placehold.co/800x600?text=Image+Not+Available&color=gray';
+                };
+            }
+        }
+        
+        // Toggle zoom on image click
+        function toggleZoom() {
+            if (currentScale === 1) {
+                zoomIn();
+            } else {
+                resetZoom();
+            }
+        }
+        
+        // Navigate through media
+        function navigateMedia(direction) {
+            const newIndex = currentMediaIndex + direction;
+            if (newIndex >= 0 && newIndex < mediaItems.length) {
+                currentMediaIndex = newIndex;
+                currentScale = 1;
+                showMediaInModal();
+            }
+        }
+        
+        // Zoom functions (only for images)
+        function zoomIn() {
+            const item = mediaItems[currentMediaIndex];
+            if (!item.isVideo) {
+                currentScale = Math.min(currentScale + 0.2, 3);
+                const modalImage = document.getElementById('modalImage');
+                if (modalImage) modalImage.style.transform = `scale(${currentScale})`;
+            }
+        }
+        
+        function zoomOut() {
+            const item = mediaItems[currentMediaIndex];
+            if (!item.isVideo) {
+                currentScale = Math.max(currentScale - 0.2, 0.5);
+                const modalImage = document.getElementById('modalImage');
+                if (modalImage) modalImage.style.transform = `scale(${currentScale})`;
+            }
+        }
+        
+        function resetZoom() {
+            const item = mediaItems[currentMediaIndex];
+            if (!item.isVideo) {
+                currentScale = 1;
+                const modalImage = document.getElementById('modalImage');
+                if (modalImage) modalImage.style.transform = `scale(1)`;
+            }
+        }
+        
+        // Download current media
+        function downloadCurrentMedia() {
+            const item = mediaItems[currentMediaIndex];
+            const link = document.createElement('a');
+            link.href = item.downloadUrl;
+            link.download = item.name;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // Close modal
+        function closeModal() {
+            document.getElementById('mediaModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // Load gallery (public function for refresh button)
+        async function loadDriveGallery() {
+            updateFolderInfo();
+            await fetchDriveFiles();
+        }
+        
+        // Escape HTML helper
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            const modal = document.getElementById('mediaModal');
+            if (modal.classList.contains('active')) {
+                if (e.key === 'Escape') {
+                    closeModal();
+                } else if (e.key === 'ArrowLeft') {
+                    navigateMedia(-1);
+                } else if (e.key === 'ArrowRight') {
+                    navigateMedia(1);
+                }
+            }
+        });
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', async () => {
+            detectTheme();
+            setupMobileMenu();
+            updateFolderInfo();
+            await fetchDriveFiles();
+        });
+    </script>
+</body>
+</html>

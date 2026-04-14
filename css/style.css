@@ -1252,3 +1252,18 @@ html {
 #install-prompt button:hover {
     transform: scale(1.05);
 }
+/* In style.css */
+/* Prevent zoom on page layout but allow on media */
+body {
+    touch-action: pan-x pan-y;
+}
+
+/* Allow zoom on images and videos */
+img, video, iframe, .modal-media, .gallery-item img {
+    touch-action: auto;
+}
+
+/* Prevent double-tap zoom on buttons */
+button, a, .nav-link, .view-btn {
+    touch-action: manipulation;
+}

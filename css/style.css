@@ -22,7 +22,7 @@
     --secondary-color:  #0060fb;
     --accent-color: #81c995;
     --gradient-start: #8ab4f8;
-    --gradient-end: #fe0000;
+    --gradient-end: #81c995;
     --bg-color: #202124;
     --text-color: #e8eaed;
     --card-bg: #2d2e32;
@@ -318,7 +318,7 @@ body {
     position: relative;
     margin-bottom: 2.5rem;
     padding-bottom: 1rem;
-    background: linear-gradient(1deg, var(--gradient-start), var(--gradient-end));
+    background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -1200,5 +1200,30 @@ html {
     
     .carousel-card {
         scroll-snap-align: start;
+    }
+}
+/* Section header with button */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 2.5rem;
+}
+
+.section-header .section-title {
+    margin-bottom: 0;
+    flex: 1;
+}
+
+@media (max-width: 576px) {
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .section-header .view-btn {
+        align-self: flex-start;
     }
 }
